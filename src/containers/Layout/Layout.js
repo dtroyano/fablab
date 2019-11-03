@@ -9,6 +9,7 @@ class Layout extends Component {
             <Aux>
                 <Header />
                 <main>
+                    BODY OF TEXT
                     {this.props.children}
                 </main>
                 <Footer />
