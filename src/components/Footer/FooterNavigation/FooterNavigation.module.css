@@ -1,0 +1,20 @@
+.FooterNavigation {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-flow: column;
+    justify-content: flex-start;
+}
+
+.FooterLinks {
+    padding: 0;
+}
+
+.FooterLinks a {
+    padding: 8px 0px !important;
+}
+
+.FablabTitle {
+    margin: 0px;
+}

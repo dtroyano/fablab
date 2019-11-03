@@ -1,26 +1,14 @@
 import React from 'react';
+import classes from './Footer.module.css';
+
+import FooterNavigation from './FooterNavigation/FooterNavigation';
 
 const footer = (props) => (
-    <footer class="space--sm footer-2 bg--dark">
+    <footer className={classes.Footer}>
+        <FooterNavigation />
         <div class="container">
             <div class="row">
-                <div class="col-md-6 col-lg-4 col-6">
-                    <h6 class="type--uppercase">FabLab Delgado</h6>
-                    <ul class="list--hover">
-                        <li>
-                            <a href="http://www.fablabnola.tech/">Home</a>
-                        </li>
-                        <li>
-                            <a href="calendar">Calendar</a>
-                        </li>
-                        <li>
-                            <a href="news">News</a>
-                        </li>
-                        <li>
-                            <a href="about">About</a>
-                        </li>
-                    </ul>
-                </div>
+
                 <div class="col-md-6 col-lg-4 col-6">
                     <div class="contact-container">
                         <p> Delgado Community College

@@ -1,0 +1,9 @@
+.Footer {
+    margin-top: 60px;
+    margin-left: 10%;
+    margin-right: 10%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
+}
