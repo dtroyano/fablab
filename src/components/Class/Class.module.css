@@ -1,0 +1,16 @@
+.Container {
+    width: 100%;
+    text-align: center;
+    margin: 60px auto;
+    display: block;
+    font-size: 1.2em;
+}
+
+.Button {
+    display: inline-block;
+    padding-left: 0px;
+}
+
+.Container ol li {
+    padding-bottom: 20px;
+}

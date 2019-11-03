@@ -1,0 +1,23 @@
+.Container {
+    width: 100%;
+    text-align: center;
+    margin: 60px auto;
+    display: block;
+    font-size: 1.2em;
+}
+
+.Button {
+    display: inline-block;
+    padding-left: 0px;
+}
+
+.Container li {
+    padding-bottom: 20px;
+}
+
+.List {
+    margin: 0 auto;
+    width: 60%;
+    font-size: .8em;
+    text-align: left;
+}

@@ -6,8 +6,8 @@ import classes from './BookButtons.module.css';
 
 const bookButtons = (props) => (
     <ul className={classes.BookButtons}>
-        <BookButton link='/'>Book Equipment</BookButton>
-        <BookButton link='/'>Book Class</BookButton>
+        <BookButton link='/equipment'>Book Equipment</BookButton>
+        <BookButton link='/class'>Book Class</BookButton>
     </ul>
 );
 
