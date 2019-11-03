@@ -1,0 +1,37 @@
+.Container {
+    background-color: #252525;
+    color: white;
+    padding-left: 20%;
+    padding-right: 20%;
+    padding-top: 60px;
+    padding-bottom: 60px;
+}
+
+.Title {
+    text-align: center;
+    font-size: 1.5em;
+}
+
+.FlexBoxes {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-flow: row;
+    align-items: strech;
+    justify-content: space-between;
+}
+
+.FlexBoxes div {
+    text-align: center;
+    width: 30%;
+}
+
+.FlexBoxes i {
+    font-size: 3em;
+}
+
+.FlexBoxes h4 {
+    font-size: 1.5em;
+    margin: 0px;
+}

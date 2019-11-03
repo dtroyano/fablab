@@ -1,0 +1,26 @@
+.Box {
+    background-color: white;
+    color: black;
+    border-radius: 6px;
+    padding: 20px;
+    height: 100%;
+    margin: 20px;
+}
+
+.Box span {
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.Box p {
+    font-size: .9em;
+}
+
+.Box a {
+    text-decoration: none;
+}
+
+.Box a:hover,
+.Box a:active {
+    text-decoration: underline;
+}
