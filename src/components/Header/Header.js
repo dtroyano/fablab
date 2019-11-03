@@ -7,7 +7,7 @@ import Logo from '../Logo/Logo';
 import classes from './Header.module.css';
 
 const header = (props) => (
-    <header>
+    <header className={classes.Header}>
         <Logo />
         <NavigationItems />
         <BookButtons />

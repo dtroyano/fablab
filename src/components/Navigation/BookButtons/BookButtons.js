@@ -1,13 +1,13 @@
 import React from 'react';
 
-import NavigationItem from '../NavigationItem/NavigationItem';
+import BookButton from './BookButton/BookButton';
 
 import classes from './BookButtons.module.css';
 
 const bookButtons = (props) => (
-    <ul className={classes.navigationItems}>
-        <NavigationItem link='/'>Book Equipment</NavigationItem>
-        <NavigationItem link='/'>Book Class</NavigationItem>
+    <ul className={classes.BookButtons}>
+        <BookButton link='/'>Book Equipment</BookButton>
+        <BookButton link='/'>Book Class</BookButton>
     </ul>
 );
 

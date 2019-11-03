@@ -1,0 +1,12 @@
+.Header {
+    margin-top: 60px;
+    margin-left: 10%;
+    margin-right: 10%;
+    height: 100px;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
+}

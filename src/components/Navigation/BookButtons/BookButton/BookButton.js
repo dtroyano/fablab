@@ -1,10 +1,10 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 
-import classes from './NavigationItem.module.css';
+import classes from './BookButton.module.css';
 
-const navigationItem = (props) => (
-    <li className={classes.NavigationItem}>
+const bookButton = (props) => (
+    <li className={classes.BookButton}>
         <NavLink
             to={props.link}
             exact
@@ -15,4 +15,4 @@ const navigationItem = (props) => (
 );
 
 
-export default navigationItem;
+export default bookButton;
