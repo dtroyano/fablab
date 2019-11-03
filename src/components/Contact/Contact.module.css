@@ -1,0 +1,11 @@
+.Container {
+    text-align: center;
+    font-size: 1.2em;
+    background-color: #eeeeee;
+    padding: 60px 0px;
+}
+
+.Container h1 {
+    font-size: 3em;
+    margin-top: 0px;
+}

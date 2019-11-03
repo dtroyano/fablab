@@ -9,10 +9,10 @@ const footerNavigation = (props) => (
         <h5 className={classes.FablabTitle}>FABLAB DELGADO</h5>
         <ul className={classes.FooterLinks} >
             <NavigationItem link='/'>Home</NavigationItem>
-            <NavigationItem link='/'>Blog</NavigationItem>
-            <NavigationItem link='/'>Calendar</NavigationItem>
-            <NavigationItem link='/'>Contact</NavigationItem>
-            <NavigationItem link='/'>About</NavigationItem>
+            <NavigationItem link='/blog'>Blog</NavigationItem>
+            <NavigationItem link='/calendar'>Calendar</NavigationItem>
+            <NavigationItem link='/contact'>Contact</NavigationItem>
+            <NavigationItem link='/about'>About</NavigationItem>
         </ul>
     </div>
 );
