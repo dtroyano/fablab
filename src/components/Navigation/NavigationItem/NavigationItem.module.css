@@ -1,15 +1,44 @@
 .NavigationItem {
-    
+    margin: 10px 0;
+    box-sizing: border-box;
+    display: block;
+    width: 100%;
 }
 
 .NavigationItem a {
-    
+    color: #666666;
+    font-family: 'Open Sans', 'Roboto', 'Helvetica', sans-serif;
+    text-decoration: none;
+    text-decoration: none;
+    width: 100%;
+    box-sizing: border-box;
+    display: block;
+    transition: .3s ease;
+    -moz-transition: .3s ease;
+    -webkit-transition: .3s ease;
 }
 
-.BookButton
-
-.NavigationItem a.active,
 .NavigationItem a:hover,
 .NavigationItem a:active {
+    color: black;
 
+}
+
+@media (min-width: 500px) {
+    .NavigationItem {
+        margin: 0;
+        display: flex;
+        height: 100%;
+        width: auto;
+        align-items: center;
+    }
+    
+    .NavigationItem a {
+        width: auto;
+        padding: 16px 10px;
+    }
+    
+    .NavigationItem a:hover,
+    .NavigationItem a:active {
+    }
 }

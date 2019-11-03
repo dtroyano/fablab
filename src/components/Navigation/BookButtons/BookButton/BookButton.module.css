@@ -1,15 +1,57 @@
 .BookButton {
-    
+    margin: 10px 0;
+    box-sizing: border-box;
+    display: block;
+    width: 100%;
 }
 
 .BookButton a {
-    
+    background-color: #4a90e2;
+    font-family: 'Open Sans', 'Helvetica', 'Arial', sans-serif;
+    border-radius: 6px;
+    color: white;
+    outline: none;
+    cursor: pointer;
+    font: inherit;
+    padding: 10px;
+    margin: 10px;
+    font-weight: bold;
+    text-decoration: none;
+    text-decoration: none;
+    width: 100%;
+    box-sizing: border-box;
+    display: block;
+    transition: .3s ease;
+    -moz-transition: .3s ease;
+    -webkit-transition: .3s ease;
 }
 
-.BookButton
+.BookButton:first-of-type {
+    margin-left: 0;
+    padding-left: 0;
+}
 
-.BookButton a.active,
 .BookButton a:hover,
 .BookButton a:active {
+    color: black;
 
+}
+
+@media (min-width: 500px) {
+    .BookButton {
+        margin: 0;
+        display: flex;
+        height: 100%;
+        width: auto;
+        align-items: center;
+    }
+    
+    .BookButton a {
+        width: auto;
+        padding: 16px 40px;
+    }
+    
+    .BookButton a:hover,
+    .BookButton a:active {
+    }
 }
