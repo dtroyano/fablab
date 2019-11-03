@@ -1,0 +1,17 @@
+.Description {
+    width: 30%;
+    margin-right: 30px;
+}
+
+.Description p:first-of-type {
+    margin-top: 0px;
+}
+
+.Description a {
+    color: inherit;
+}
+
+.Description a:hover,
+.Description a:active {
+    text-decoration: none;
+}

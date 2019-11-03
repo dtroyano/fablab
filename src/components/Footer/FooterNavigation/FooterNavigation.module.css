@@ -1,10 +1,12 @@
 .FooterNavigation {
     margin: 0;
     padding: 0;
+    padding-right: 20%;
     list-style: none;
     display: flex;
     flex-flow: column;
     justify-content: flex-start;
+    width: 20%;
 }
 
 .FooterLinks {
@@ -13,6 +15,11 @@
 
 .FooterLinks a {
     padding: 8px 0px !important;
+}
+
+.FooterLinks a:hover,
+.FooterLinks a:active {
+    color: #ffffff !important;
 }
 
 .FablabTitle {
