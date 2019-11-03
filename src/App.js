@@ -2,6 +2,7 @@ import React from 'react';
 import { Route, withRouter, Switch } from 'react-router-dom';
 import './App.css';
 
+import MyCalendar from './containers/Calendar/Calendar';
 import BookClass from './components/Class/Class';
 import Equipment from './components/Equipment/Equipment';
 import Contact from './components/Contact/Contact';
@@ -12,6 +13,7 @@ function App() {
   return (
     <Layout>
       <Switch>
+        <Route path='/calendar' exact component={MyCalendar} />
         <Route path='/class' exact component={BookClass} />
         <Route path='/equipment' exact component={Equipment} />
         <Route path='/contact' exact component={Contact} />

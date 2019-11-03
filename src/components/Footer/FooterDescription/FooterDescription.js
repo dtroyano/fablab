@@ -15,7 +15,7 @@ const footerDescription = (props) => (
             <br /> P: (504) 517 5656
         </p>
         <p>Feel free to contact us with any questions about the lab, equipment, classes, or events we offer.</p>
-        <p>We are open to the public most weekdays, <Link to='/'>check our calendar</Link> before dropping by.</p>
+        <p>We are open to the public most weekdays, <Link to='/calendar'>check our calendar</Link> before dropping by.</p>
     </div>
 );
 
