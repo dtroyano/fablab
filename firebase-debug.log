@@ -1,0 +1,49 @@
+[debug] [2019-11-04T22:38:00.097Z] ----------------------------------------------------------------------
+[debug] [2019-11-04T22:38:00.099Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\Danny\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js init
+[debug] [2019-11-04T22:38:00.100Z] CLI Version:   7.6.2
+[debug] [2019-11-04T22:38:00.100Z] Platform:      win32
+[debug] [2019-11-04T22:38:00.100Z] Node Version:  v10.16.0
+[debug] [2019-11-04T22:38:00.101Z] Time:          Mon Nov 04 2019 16:38:00 GMT-0600 (Central Standard Time)
+[debug] [2019-11-04T22:38:00.101Z] ----------------------------------------------------------------------
+[debug] [2019-11-04T22:38:00.101Z] 
+[debug] [2019-11-04T22:38:00.108Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2019-11-04T22:38:00.108Z] > authorizing via signed-in user
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  C:\Users\Danny\Documents\Web Development\fablab
+
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] but for now we'll just set up a default project.
+[info] 
+[debug] [2019-11-04T22:38:07.653Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2019-11-04T22:38:07.653Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2019-11-04T22:38:07.907Z] <<< HTTP RESPONSE 200
+[debug] [2019-11-04T22:38:07.934Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects?pageSize=100  
+ 
+[debug] [2019-11-04T22:38:08.229Z] <<< HTTP RESPONSE 200
+[info] i  Using project delgado-fab-lab (Delgado Fab Lab)
+[info] 
+=== Hosting Setup
+[info] 
+[info] Your public directory is the folder (relative to your project directory) that
+[info] will contain Hosting assets to be uploaded with firebase deploy. If you
+[info] have a build process for your assets, use your build's output directory.
+[info] 
+[debug] [2019-11-04T22:38:32.128Z] Error: kill ENOSYS
+    at process.kill (internal/process/per_thread.js:198:13)
+    at process.listener (C:\Users\Danny\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\signal-exit\index.js:95:15)
+    at process.emit (events.js:198:13)
+[error] 
+[error] Error: An unexpected error has occurred.
