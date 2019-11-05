@@ -17,11 +17,20 @@ export const addEvent = (event) => {
     }
 }
 
-export const removeEvent = (key) => {
+export const eventRemoved = (idx) => {
     return {
         type: actionTypes.REMOVE_EVENT,
-        key: key
+        idx: idx
     };
+}
+
+export const removeEvent = (key, idx) => {
+    return dispatch => {
+        axios.delete(`calendar/${key}.json`)
+            .then(res => {
+                dispatch(eventRemoved(idx));
+            })
+    }
 };
 
 export const setCalendar = (events) => {

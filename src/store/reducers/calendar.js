@@ -12,7 +12,12 @@ const reducer = (state = initialState, action) => {
                 events: state.events.concat(action.event)
             };
         case actionTypes.REMOVE_EVENT:
-            return state;
+            const nextEvents = [...state.events];
+            nextEvents.splice(action.idx, 1);
+            return {
+                ...state,
+                events: nextEvents
+            };
 
         case actionTypes.SET_CALENDAR:
             return {
