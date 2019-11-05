@@ -12,7 +12,8 @@ const reducer = (state = initialState, action) => {
                 start: action.event.start,
                 end: action.event.end,
                 allDay: action.event.allDay,
-                key: action.key
+                key: action.key,
+                priority: action.event.priority
             }
             return {
                 ...state,

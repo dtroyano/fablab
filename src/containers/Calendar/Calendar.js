@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../../store/actions/calendar';
-import { Calendar, momentLocalizer } from 'react-big-calendar';
+import { Calendar, momentLocalizer, Views } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.css'
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop'
@@ -34,7 +34,13 @@ class MyCalendar extends Component {
         } else if (evt.allDay && !droppedOnAllDaySlot) {
             allDay = false;
         }
-        const event = { title: evt.title, start, end, allDay };
+        const event = {
+            title: evt.title,
+            priority: evt.priority,
+            start,
+            end,
+            allDay
+        };
         this.props.onEventAdded(event);
         this.props.onEventRemoved(evt.key, idx);
     }
@@ -46,6 +52,7 @@ class MyCalendar extends Component {
         const event = {
             title: evt.title,
             allDay: evt.allDay,
+            priority: evt.priority,
             start,
             end
         };
@@ -63,6 +70,7 @@ class MyCalendar extends Component {
             allDay: evt.slots.length === 1,
             start: evt.start,
             end: evt.end,
+            priority: 0
         }
         this.props.onEventAdded(event);
     }
@@ -77,13 +85,22 @@ class MyCalendar extends Component {
                 <DragAndDropCalendar
                     selectable
                     localizer={localizer}
+                    defaultView={Views.WEEK}
                     events={this.props.events}
                     onEventResize={this.resizeEvent}
                     onEventDrop={this.moveEvent}
                     onDragStart={console.log}
                     resizable
                     onSelectSlot={this.newEvent}
-                    style={{ height: 1000 }} />
+                    onSelectEvent={event => alert(event.title)}
+                    style={{ height: 1000 }}
+                    eventPropGetter={event => ({
+                        style: {
+                            backgroundColor: event.priority === 0
+                                ? "#ad4ca4"
+                                : "#3174ad"
+                        }
+                    })} />
             </div >
 
         );
