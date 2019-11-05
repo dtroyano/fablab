@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import * as actions from '../../store/actions/calendar';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.css'
@@ -13,40 +15,41 @@ const DragAndDropCalendar = withDragAndDrop(Calendar);
 class MyCalendar extends Component {
     constructor(props) {
         super(props);
-        this.state = { events: [] };
-        // this.moveEvent = this.moveEvent.bind(this);
+        //this.moveEvent = this.moveEvent.bind(this);
         this.newEvent = this.newEvent.bind(this);
     }
+
     componentDidMount() {
-        axios.get('calendar.json')
-            .then(res => {
-                console.log(res.data);
-                const events = [];
-                for (let key in res.data) {
-                    events.push({
-                        ...res.data[key].hour
-                    });
-                }
-                this.setState({ events: events });
-                //this.setState({ events: events });
-            });
+        this.props.onInitCalendar();
     }
 
-    // moveEvent({ event, start, end, isAllDay: droppedOnAllDaySlot }) {
-    //     const { events } = this.state;
-    //     const idx = events.indexOf(event);
-    //     let allDay = event.allDay;
+    // moveEvent({ event: evt, start, end, isAllDay: droppedOnAllDaySlot }) {
 
-    //     if (!event.allDay && droppedOnAllDaySlot) {
+    //     const { events } = this.state;
+    //     const idx = events.indexOf(evt);
+    //     let allDay = evt.allDay;
+
+    //     if (!evt.allDay && droppedOnAllDaySlot) {
     //         allDay = true;
-    //     } else if (event.allDay && !droppedOnAllDaySlot) {
+    //     } else if (evt.allDay && !droppedOnAllDaySlot) {
     //         allDay = false;
     //     }
-
-    //     const updatedEvent = { ...event, start, end, allDay };
+    //     console.log(this.state.events[idx].key);
+    //     const event = { ...evt, start, end, allDay };
+    //     axios.post('calendar.json', { event })
+    //         .then(res => {
+    //             console.log(evt.key);
+    //             axios.delete(`calendar/${this.state.events[idx].key}`)
+    //                 .then(res => {
+    //                     console.log('YAY');
+    //                 })
+    //         })
+    //         .catch(err => {
+    //             console.log(err)
+    //         })
 
     //     const nextEvents = [...events];
-    //     nextEvents.splice(idx, 1, updatedEvent);
+    //     nextEvents.splice(idx, 1, event);
 
     //     this.setState({ events: nextEvents });
     // }
@@ -63,24 +66,17 @@ class MyCalendar extends Component {
     //     this.setState({ events: nextEvents });
     // }
 
-    newEvent(event) {
-        let idList = this.state.events.map(a => a.id)
+    newEvent(evt) {
+        let idList = this.props.events.map(a => a.id)
         let newId = Math.max(...idList) + 1
-        let hour = {
+        let event = {
             id: newId,
             title: 'New Event',
-            allDay: event.slots.length === 1,
-            start: event.start,
-            end: event.end,
+            allDay: evt.slots.length === 1,
+            start: evt.start,
+            end: evt.end,
         }
-        this.setState({
-            events: this.state.events.concat([hour]),
-        })
-        axios.post('calendar.json', { hour })
-            .then(res => {
-                console.log(res);
-                console.log(res.data);
-            })
+        this.props.onEventAdded(event);
     }
 
 
@@ -93,10 +89,10 @@ class MyCalendar extends Component {
                 <DragAndDropCalendar
                     selectable
                     localizer={localizer}
-                    events={this.state.events}
+                    events={this.props.events}
                     // onEventResize={this.resizeEvent}
-                    // onEventDrop={this.moveEvent}
-                    // onDragStart={console.log}
+                    //onEventDrop={this.moveEvent}
+                    //onDragStart={console.log}
                     // resizable                    
                     onSelectSlot={this.newEvent}
                     style={{ height: 1000 }} />
@@ -106,4 +102,18 @@ class MyCalendar extends Component {
     }
 };
 
-export default MyCalendar;
+const mapDispatchToProps = dispatch => {
+    return {
+        onEventAdded: (event) => dispatch(actions.addEvent(event)),
+        onEventRemoved: (key) => dispatch(actions.removeEvent(key)),
+        onInitCalendar: () => dispatch(actions.initCalendar())
+    }
+}
+
+const mapStateToProps = state => {
+    return {
+        events: state.events
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(MyCalendar, axios);
