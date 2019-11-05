@@ -7,12 +7,14 @@ import 'react-big-calendar/lib/addons/dragAndDrop/styles.css'
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop'
 import axios from '../../axios-orders';
 import moment from 'moment';
-
-//import events from './events';
+import { RRule } from 'rrule';
 
 const DragAndDropCalendar = withDragAndDrop(Calendar);
 
 class MyCalendar extends Component {
+    state = {
+        recurringEvents: []
+    }
     constructor(props) {
         super(props);
         this.moveEvent = this.moveEvent.bind(this);
@@ -75,6 +77,40 @@ class MyCalendar extends Component {
         this.props.onEventAdded(event);
     }
 
+    findRecurringEvents = (range) => {
+        this.setState({ recurringEvents: [] });
+        const rule = new RRule({
+            freq: RRule.WEEKLY,
+            count: 10,
+            interval: 1,
+            byweekday: RRule.TH,
+            bymonth: [9, 10, 11]
+        });
+        let start = new Date();
+        let end = new Date();
+        if (Array.isArray(range)) {
+            start = range[0];
+            end = range[range.length - 1];
+            end.setHours(23, 59, 59);
+        } else {
+            start = range.start;
+            end = range.end;
+        }
+        console.log(rule.between(start, end));
+        const events = rule.between(start, end);
+        const recurringEvents = [];
+        events.map(event => {
+            recurringEvents.push({
+                title: 'Recurring Event',
+                allDay: true,
+                start: event,
+                end: event,
+                priority: 1
+            })
+        });
+        console.log(recurringEvents);
+        this.setState({ recurringEvents: recurringEvents });
+    }
 
 
     render() {
@@ -86,7 +122,7 @@ class MyCalendar extends Component {
                     selectable
                     localizer={localizer}
                     defaultView={Views.WEEK}
-                    events={this.props.events}
+                    events={this.props.events.concat(this.state.recurringEvents)}
                     onEventResize={this.resizeEvent}
                     onEventDrop={this.moveEvent}
                     onDragStart={console.log}
@@ -94,6 +130,7 @@ class MyCalendar extends Component {
                     onSelectSlot={this.newEvent}
                     onSelectEvent={event => alert(event.title)}
                     style={{ height: 1000 }}
+                    onRangeChange={this.findRecurringEvents}
                     eventPropGetter={event => ({
                         style: {
                             backgroundColor: event.priority === 0
