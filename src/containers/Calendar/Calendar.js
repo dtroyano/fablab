@@ -39,17 +39,20 @@ class MyCalendar extends Component {
         this.props.onEventRemoved(evt.key, idx);
     }
 
-    // resizeEvent = ({ event, start, end }) => {
-    //     const { events } = this.state;
+    resizeEvent = ({ event: evt, start, end }) => {
+        const { events } = this.props;
+        const idx = events.indexOf(evt);
+        console.log(evt);
+        const event = {
+            title: evt.title,
+            allDay: evt.allDay,
+            start,
+            end
+        };
+        this.props.onEventAdded(event);
+        this.props.onEventRemoved(evt.key, idx);
 
-    //     const nextEvents = events.map(existingEvent => {
-    //         return existingEvent.id === event.id
-    //             ? { ...existingEvent, start, end }
-    //             : existingEvent;
-    //     })
-
-    //     this.setState({ events: nextEvents });
-    // }
+    }
 
     newEvent(evt) {
         let idList = this.props.events.map(a => a.id)
@@ -75,10 +78,10 @@ class MyCalendar extends Component {
                     selectable
                     localizer={localizer}
                     events={this.props.events}
-                    // onEventResize={this.resizeEvent}
+                    onEventResize={this.resizeEvent}
                     onEventDrop={this.moveEvent}
                     onDragStart={console.log}
-                    // resizable                    
+                    resizable
                     onSelectSlot={this.newEvent}
                     style={{ height: 1000 }} />
             </div >

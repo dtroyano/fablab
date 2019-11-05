@@ -1,10 +1,11 @@
 import * as actionTypes from './actionTypes';
 import axios from '../../axios-orders';
 
-export const eventAdded = (event) => {
+export const eventAdded = (event, key) => {
     return {
         type: actionTypes.ADD_EVENT,
-        event: event
+        event: event,
+        key: key
     };
 };
 
@@ -12,7 +13,7 @@ export const addEvent = (event) => {
     return dispatch => {
         axios.post('calendar.json', { event })
             .then(res => {
-                dispatch(eventAdded(event));
+                dispatch(eventAdded(event, res.data.name));
             });
     }
 }
@@ -29,6 +30,9 @@ export const removeEvent = (key, idx) => {
         axios.delete(`calendar/${key}.json`)
             .then(res => {
                 dispatch(eventRemoved(idx));
+            })
+            .catch(err => {
+                console.log('fucked up removing')
             })
     }
 };
