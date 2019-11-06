@@ -1,20 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import * as actions from '../../store/actions/calendar';
+import * as actions from '../../store/actions';
 import { Calendar, momentLocalizer, Views } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.css'
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop'
 import axios from '../../axios-orders';
 import moment from 'moment';
-import { RRule } from 'rrule';
 
 const DragAndDropCalendar = withDragAndDrop(Calendar);
 
 class MyCalendar extends Component {
-    state = {
-        recurringEvents: []
-    }
     constructor(props) {
         super(props);
         this.moveEvent = this.moveEvent.bind(this);
@@ -23,44 +19,50 @@ class MyCalendar extends Component {
 
     componentDidMount() {
         this.props.onInitCalendar();
+        let start = new Date();
+        let end = new Date();
+        start = new Date(start.setDate(start.getDate() - 7))
+        end = new Date(end.setDate(end.getDate() + 7));
+        this.findRecurringEvents([start, end]);
     }
 
     moveEvent({ event: evt, start, end, isAllDay: droppedOnAllDaySlot }) {
+        if (!evt.recurring) {
+            const { events } = this.props;
+            const idx = events.indexOf(evt);
+            let allDay = evt.allDay;
 
-        const { events } = this.props;
-        const idx = events.indexOf(evt);
-        let allDay = evt.allDay;
-
-        if (!evt.allDay && droppedOnAllDaySlot) {
-            allDay = true;
-        } else if (evt.allDay && !droppedOnAllDaySlot) {
-            allDay = false;
+            if (!evt.allDay && droppedOnAllDaySlot) {
+                allDay = true;
+            } else if (evt.allDay && !droppedOnAllDaySlot) {
+                allDay = false;
+            }
+            const event = {
+                title: evt.title,
+                priority: evt.priority,
+                start,
+                end,
+                allDay
+            };
+            this.props.onEventAdded(event);
+            this.props.onEventRemoved(evt.key, idx);
         }
-        const event = {
-            title: evt.title,
-            priority: evt.priority,
-            start,
-            end,
-            allDay
-        };
-        this.props.onEventAdded(event);
-        this.props.onEventRemoved(evt.key, idx);
     }
 
     resizeEvent = ({ event: evt, start, end }) => {
-        const { events } = this.props;
-        const idx = events.indexOf(evt);
-        console.log(evt);
-        const event = {
-            title: evt.title,
-            allDay: evt.allDay,
-            priority: evt.priority,
-            start,
-            end
-        };
-        this.props.onEventAdded(event);
-        this.props.onEventRemoved(evt.key, idx);
-
+        if (!evt.recurring) {
+            const { events } = this.props;
+            const idx = events.indexOf(evt);
+            const event = {
+                title: evt.title,
+                allDay: evt.allDay,
+                priority: evt.priority,
+                start,
+                end
+            };
+            this.props.onEventAdded(event);
+            this.props.onEventRemoved(evt.key, idx);
+        }
     }
 
     newEvent(evt) {
@@ -78,14 +80,6 @@ class MyCalendar extends Component {
     }
 
     findRecurringEvents = (range) => {
-        this.setState({ recurringEvents: [] });
-        const rule = new RRule({
-            freq: RRule.WEEKLY,
-            count: 10,
-            interval: 1,
-            byweekday: RRule.TH,
-            bymonth: [9, 10, 11]
-        });
         let start = new Date();
         let end = new Date();
         if (Array.isArray(range)) {
@@ -96,20 +90,7 @@ class MyCalendar extends Component {
             start = range.start;
             end = range.end;
         }
-        console.log(rule.between(start, end));
-        const events = rule.between(start, end);
-        const recurringEvents = [];
-        events.map(event => {
-            recurringEvents.push({
-                title: 'Recurring Event',
-                allDay: true,
-                start: event,
-                end: event,
-                priority: 1
-            })
-        });
-        console.log(recurringEvents);
-        this.setState({ recurringEvents: recurringEvents });
+        this.props.onInitRecurring(start, end);
     }
 
 
@@ -122,7 +103,7 @@ class MyCalendar extends Component {
                     selectable
                     localizer={localizer}
                     defaultView={Views.WEEK}
-                    events={this.props.events.concat(this.state.recurringEvents)}
+                    events={this.props.events.concat(this.props.recurringEvents)}
                     onEventResize={this.resizeEvent}
                     onEventDrop={this.moveEvent}
                     onDragStart={console.log}
@@ -148,13 +129,15 @@ const mapDispatchToProps = dispatch => {
     return {
         onEventAdded: (event) => dispatch(actions.addEvent(event)),
         onEventRemoved: (key, idx) => dispatch(actions.removeEvent(key, idx)),
-        onInitCalendar: () => dispatch(actions.initCalendar())
+        onInitCalendar: () => dispatch(actions.initCalendar()),
+        onInitRecurring: (start, end) => dispatch(actions.recurringInit(start, end))
     }
 }
 
 const mapStateToProps = state => {
     return {
-        events: state.events
+        events: state.calendar.events,
+        recurringEvents: state.recurring.events
     }
 }
 
