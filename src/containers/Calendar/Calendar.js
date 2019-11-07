@@ -102,11 +102,15 @@ class MyCalendar extends Component {
         this.setState({ addEvent: true });
     }
 
+    removeAddEvent = () => {
+        this.setState({ addEvent: false });
+    }
+
     render() {
         const localizer = momentLocalizer(moment);
         let addEvent = null;
         if (this.state.addEvent) {
-            addEvent = <AddEvent />;
+            addEvent = <AddEvent close={this.removeAddEvent} />;
         }
 
         return (

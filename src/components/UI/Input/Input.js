@@ -1,4 +1,6 @@
 import React from 'react';
+import DateTimePicker from 'react-datetime-picker';
+
 import classes from './Input.module.css';
 
 const input = (props) => {
@@ -11,30 +13,34 @@ const input = (props) => {
 
     switch (props.elementType) {
         case ('input'):
-            inputElement = <input onChange={props.changed} className={inputClasses.join(' ')} {...props.elementConfig} value={props.value} />
+            inputElement = <input id={props.elementId} onChange={props.changed} className={inputClasses.join(' ')} {...props.elementConfig} value={props.value} />
             break;
         case ('textarea'):
-            inputElement = <textarea onChange={props.changed} className={inputClasses.join(' ')} {...props.elementConfig} value={props.value} />
+            inputElement = <textarea id={props.elementId} onChange={props.changed} className={inputClasses.join(' ')} {...props.elementConfig} value={props.value} />
             break;
         case ('select'):
             inputElement = (
-                <select onChange={props.changed} className={inputClasses.join(' ')} {...props.elementConfig} value={props.value}>
+                <select id={props.elementId} onChange={props.changed} className={inputClasses.join(' ')} {...props.elementConfig} value={props.value}>
                     {props.elementConfig.options.map(option => (
                         <option key={option.value} value={option.value}>{option.displayValue}</option>
                     ))}
                 </select>)
             break;
         case ('date'):
-            inputElement = <input type='date' value={props.value} onChange={props.changed} />
+            inputElement = <input id={props.elementId} type='date' value={props.value} onChange={props.changed} />
+            break;
+        case ('datetime'):
+            inputElement = <DateTimePicker onChange={props.dateTimeChanged} value={props.value} id={props.elementId} disableClock={true} />
             break;
         default:
-            inputElement = <input onChange={props.changed} className={inputClasses.join(' ')} {...props.elementConfig} value={props.value} />
+            inputElement = <input id={props.elementId} onChange={props.changed} className={inputClasses.join(' ')} {...props.elementConfig} value={props.value} />
     }
 
     return (
         <div className={classes.Input}>
-            <label className={classes.Label}>{props.label}</label>
-            {inputElement}
+            <label className={classes.Label}>{props.label}
+                {inputElement}
+            </label>
         </div >
     );
 };

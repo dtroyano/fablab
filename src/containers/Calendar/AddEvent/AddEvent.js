@@ -14,6 +14,7 @@ class AddEvent extends Component {
         popupOpen: true,
         addForm: {
             title: {
+                label: 'Title of Event',
                 elementType: 'input',
                 elementConfig: {
                     type: 'text',
@@ -22,23 +23,28 @@ class AddEvent extends Component {
                 value: ''
             },
             start: {
-                elementType: 'date',
-                value: 0
+                label: "Start Date",
+                elementType: 'datetime',
+                value: new Date()
             },
             end: {
-                elementType: 'date',
-                value: 0
+                label: "End Date",
+                elementType: 'datetime',
+                value: new Date()
             },
             allDay: {
+                label: "Event is All Day",
                 elementType: 'select',
                 elementConfig: {
                     options: [
-                        { value: false, displayValue: "No" },
-                        { value: true, displayValue: "Yes" }
+                        { value: "false", displayValue: "No" },
+                        { value: "true", displayValue: "Yes" }
                     ]
-                }
+                },
+                value: "false"
             },
             priority: {
+                label: "Event Priority",
                 elementType: 'select',
                 elementConfig: {
                     options: [
@@ -51,21 +57,42 @@ class AddEvent extends Component {
         }
     };
 
+    componentDidUpdate() {
+        //console.log(this.state.addForm);
+    }
+
+    dateTimeHandler = (event, inputId) => {
+        const updatedForm = { ...this.state.addForm };
+        const updatedElement = { ...updatedForm[inputId] };
+        updatedElement.value = event;
+        updatedForm[inputId] = updatedElement;
+        this.setState({ addForm: updatedForm });
+    }
+
+
     inputChangedHandler = (event, inputId) => {
         const updatedForm = { ...this.state.addForm };
         const updatedElement = { ...updatedForm[inputId] };
         updatedElement.value = event.target.value;
-        //updatedFormElement.valid = this.checkValidity(updatedFormElement.value, updatedFormElement.validation);
-        //updatedFormElement.touched = true;
         updatedForm[inputId] = updatedElement;
         this.setState({ addForm: updatedForm });
-
     }
 
-    submitHandler = (event) => {
-        event.preventDefault();
-        console.log(this.state.addForm);
+    submitHandler = (evt) => {
+        evt.preventDefault();
+        let idList = this.props.events.map(a => a.id)
+        let newId = Math.max(...idList) + 1
+        let event = {
+            id: newId,
+            title: this.state.addForm.title.value,
+            allDay: this.state.addForm.allDay.value === "true",
+            start: this.state.addForm.start.value,
+            end: this.state.addForm.end.value,
+            priority: this.state.addForm.priority.value
+        }
+        this.props.onEventAdded(event);
     }
+
 
     render() {
         const formElementArray = [];
@@ -80,15 +107,20 @@ class AddEvent extends Component {
             {formElementArray.map(formElement => (
                 <Input
                     changed={(event) => this.inputChangedHandler(event, formElement.id)}
+                    dateTimeChanged={(event) => this.dateTimeHandler(event, formElement.id)}
                     key={formElement.id}
+                    elementId={formElement.id}
                     elementType={formElement.config.elementType}
                     elementConfig={formElement.config.elementConfig}
                     value={formElement.config.value}
+                    label={formElement.config.label}
                 //invalid={!formElement.config.valid}
                 //shouldValidate={formElement.config.validation}
                 //touched={formElement.config.touched} 
                 />
             ))}
+            <Button clicked={this.props.close}>CLOSE</Button>
+
             <Button clicked={this.submitHandler}>ADD EVENT</Button>
         </form>);
 
@@ -110,4 +142,10 @@ const mapDispatchToProps = dispatch => {
     }
 }
 
-export default connect(null, mapDispatchToProps)(AddEvent, axios);
+const mapStateToProps = state => {
+    return {
+        events: state.calendar.events
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddEvent, axios);
