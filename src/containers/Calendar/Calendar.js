@@ -8,6 +8,8 @@ import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop'
 import axios from '../../axios-orders';
 import moment from 'moment';
 
+import AddEvent from './AddEvent/AddEvent';
+
 const DragAndDropCalendar = withDragAndDrop(Calendar);
 
 class MyCalendar extends Component {
@@ -15,6 +17,9 @@ class MyCalendar extends Component {
         super(props);
         this.moveEvent = this.moveEvent.bind(this);
         this.newEvent = this.newEvent.bind(this);
+    }
+    state = {
+        addEvent: false
     }
 
     componentDidMount() {
@@ -93,12 +98,20 @@ class MyCalendar extends Component {
         this.props.onInitRecurring(start, end);
     }
 
+    triggerAddEvent = () => {
+        this.setState({ addEvent: true });
+    }
 
     render() {
         const localizer = momentLocalizer(moment);
+        let addEvent = null;
+        if (this.state.addEvent) {
+            addEvent = <AddEvent />;
+        }
 
         return (
             <div>
+                {addEvent}
                 <DragAndDropCalendar
                     selectable
                     localizer={localizer}
@@ -108,7 +121,7 @@ class MyCalendar extends Component {
                     onEventDrop={this.moveEvent}
                     onDragStart={console.log}
                     resizable
-                    onSelectSlot={this.newEvent}
+                    onSelectSlot={this.triggerAddEvent}
                     onSelectEvent={event => alert(event.title)}
                     style={{ height: 1000 }}
                     onRangeChange={this.findRecurringEvents}
