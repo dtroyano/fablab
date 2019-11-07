@@ -25,23 +25,23 @@ class AddEvent extends Component {
             start: {
                 label: "Start Date",
                 elementType: 'datetime',
-                value: new Date()
+                value: this.props.start
             },
             end: {
                 label: "End Date",
                 elementType: 'datetime',
-                value: new Date()
+                value: this.props.end
             },
             allDay: {
                 label: "Event is All Day",
                 elementType: 'select',
                 elementConfig: {
                     options: [
-                        { value: "false", displayValue: "No" },
-                        { value: "true", displayValue: "Yes" }
+                        { value: false, displayValue: "No" },
+                        { value: true, displayValue: "Yes" }
                     ]
                 },
-                value: "false"
+                value: this.props.allDay
             },
             priority: {
                 label: "Event Priority",

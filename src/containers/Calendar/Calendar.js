@@ -19,7 +19,10 @@ class MyCalendar extends Component {
         this.newEvent = this.newEvent.bind(this);
     }
     state = {
-        addEvent: false
+        addEvent: false,
+        eventStart: new Date(),
+        eventEnd: new Date(),
+        allDay: false
     }
 
     componentDidMount() {
@@ -98,8 +101,8 @@ class MyCalendar extends Component {
         this.props.onInitRecurring(start, end);
     }
 
-    triggerAddEvent = () => {
-        this.setState({ addEvent: true });
+    triggerAddEvent = (evt) => {
+        this.setState({ addEvent: true, eventStart: evt.start, eventEnd: evt.end, allDay: evt.slots.length === 1 });
     }
 
     removeAddEvent = () => {
@@ -110,7 +113,11 @@ class MyCalendar extends Component {
         const localizer = momentLocalizer(moment);
         let addEvent = null;
         if (this.state.addEvent) {
-            addEvent = <AddEvent close={this.removeAddEvent} />;
+            addEvent = <AddEvent
+                close={this.removeAddEvent}
+                start={this.state.eventStart}
+                end={this.state.eventEnd}
+                allDay={this.state.allDay} />;
         }
 
         return (
