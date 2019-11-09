@@ -56,7 +56,8 @@ export const initCalendar = () => {
                         'end': new Date(res.data[key].event.end),
                         'allDay': res.data[key].event.allDay,
                         'key': key,
-                        'priority': res.data[key].event.priority
+                        'priority': res.data[key].event.priority,
+                        'recurring': false
                     });
                 }
                 dispatch(setCalendar(events));

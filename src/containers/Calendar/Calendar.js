@@ -22,7 +22,11 @@ class MyCalendar extends Component {
         addEvent: false,
         eventStart: new Date(),
         eventEnd: new Date(),
-        allDay: false
+        allDay: false,
+        currentView: {
+            start: new Date(),
+            end: new Date()
+        }
     }
 
     componentDidMount() {
@@ -98,6 +102,7 @@ class MyCalendar extends Component {
             start = range.start;
             end = range.end;
         }
+        this.setState({ currentView: { start: start, end: end } });
         this.props.onInitRecurring(start, end);
     }
 
@@ -117,7 +122,9 @@ class MyCalendar extends Component {
                 close={this.removeAddEvent}
                 start={this.state.eventStart}
                 end={this.state.eventEnd}
-                allDay={this.state.allDay} />;
+                allDay={this.state.allDay}
+                viewStart={this.state.currentView.start}
+                viewEnd={this.state.currentView.end} />;
         }
 
         return (

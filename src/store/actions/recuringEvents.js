@@ -5,36 +5,19 @@ import { Schedule } from '@rschedule/core/generators';
 import '@rschedule/standard-date-adapter/setup';
 
 
-export const addRecurring = (event) => {
+export const addRecurring = (event, start, end) => {
     return dispatch => {
-        let time = new Date();
-        time = new Date(time.setHours(time.getHours() - 14));
-        const rule = {
-            frequency: "WEEKLY",
-            byDayOfWeek: ["TU"],
-            start: time
-        };
-        const details = {
-            title: 'Recurring Event',
-            allDay: false,
-            length: 90,
-            priority: 0
-        };
-        const event = {
-            rule: rule,
-            details: details
-        };
-
         axios.post('recurring.json', { event })
             .then(res => {
                 console.log(res);
-                dispatch(recurringAdded(event));
+                dispatch(recurringInit(start, end));
             });
     }
 
 }
 
 export const recurringAdded = (event) => {
+    //CURRENTLY IS NEVER CALLED ADD ERROR FUNCTIONALITY LATER
     return {
         type: actionTypes.ADD_RECURRING,
         event: event
@@ -87,7 +70,8 @@ export const recurringInit = (start, end) => {
                             'end': end,
                             'allDay': res.data[key].event.details.allDay,
                             'key': key,
-                            'priority': res.data[key].event.details.priority
+                            'priority': res.data[key].event.details.priority,
+                            'recurring': true
                         });
                     })
                 }

@@ -224,6 +224,10 @@ class AddEvent extends Component {
                 },
                 value: this.props.end
             }
+        },
+        currentView: {
+            start: this.props.viewStart,
+            end: this.props.viewEnd
         }
     };
 
@@ -300,38 +304,35 @@ class AddEvent extends Component {
 
     recurringEvent = () => {
         console.log('made it recurring submit');
-        let byDayofWeek = [];
+        let byDayOfWeek = [];
         for (let key in this.state.reccurringForm) {
             if (this.state.reccurringForm[key].dayOfWeek) {
                 if (this.state.reccurringForm[key].value >= 0) {
-                    byDayofWeek.push(this.dayofWeekHandler(this.state.reccurringForm[key]));
+                    byDayOfWeek.push(this.dayofWeekHandler(this.state.reccurringForm[key]));
                 }
             }
         }
-        console.log(byDayofWeek);
-        // const rule = {
-        //     frequency: this.state.reccurringForm.frequency.value,
-        //     byDayOfWeek: ["TU"],
-        //     start: time
-        // };
-        // const details = {
-        //     title: 'Recurring Event',
-        //     allDay: false,
-        //     length: 90,
-        //     priority: 0
-        // };
-        // const event = {
-        //     rule: rule,
-        //     details: details
-        // };
-        // let event = {
-        //     title: this.state.addForm.title.value,
-        //     allDay: this.state.addForm.allDay.value == 'true',
-        //     start: this.state.addForm.start.value,
-        //     end: this.state.addForm.end.value,
-        //     priority: this.state.addForm.priority.value
-        // }
-        //this.props.onRecurringAdded(event);
+        const length = this.state.addForm.end.value.getMinutes() - this.state.addForm.start.value.getMinutes();
+        const rule = {
+            frequency: this.state.reccurringForm.frequency.value,
+            byDayOfWeek: byDayOfWeek,
+            start: this.state.addForm.start.value
+        };
+        if (!this.state.reccurringForm.continuesForever.value) {
+            rule.end = this.state.reccurringForm.endDate.value;
+        }
+        const details = {
+            title: this.state.addForm.title.value,
+            allDay: this.state.addForm.allDay.value,
+            length: length,
+            priority: this.state.addForm.priority.value
+        };
+        const event = {
+            rule: rule,
+            details: details
+        };
+        console.log(event);
+        this.props.onRecurringAdded(event, this.state.currentView.start, this.state.currentView.end);
     }
 
     oneTimeEvent = () => {
@@ -426,7 +427,7 @@ class AddEvent extends Component {
 const mapDispatchToProps = dispatch => {
     return {
         onEventAdded: (event) => dispatch(actions.addEvent(event)),
-        onRecurringAdded: (event) => dispatch(actions.recurringAdded(event))
+        onRecurringAdded: (event, start, end) => dispatch(actions.addRecurring(event, start, end))
     }
 }
 
