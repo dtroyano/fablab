@@ -1,8 +1,8 @@
 .PopupBox {
     width: 40%;
-    position: fixed;
+    position: absolute;
     z-index: 200;
     left: 30%;
-    top: 30%;
+    top: 200px;
     background-color: white;
 }

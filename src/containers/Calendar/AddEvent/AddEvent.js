@@ -23,13 +23,19 @@ class AddEvent extends Component {
                 value: ''
             },
             start: {
-                label: "Start Date",
+                label: "Start Time",
                 elementType: 'datetime',
+                elementConfig: {
+                    disableClock: true
+                },
                 value: this.props.start
             },
             end: {
-                label: "End Date",
+                label: "End Time",
                 elementType: 'datetime',
+                elementConfig: {
+                    disableClock: true
+                },
                 value: this.props.end
             },
             allDay: {
@@ -53,6 +59,73 @@ class AddEvent extends Component {
                     ]
                 },
                 value: 0
+            },
+            recurring: {
+                label: "Is the Event Recurring?",
+                elementType: 'select',
+                elementConfig: {
+                    options: [
+                        { value: 'true', displayValue: 'Yes' },
+                        { value: 'false', displayValue: 'No' }
+                    ]
+                },
+                value: 'false'
+            }
+        },
+        reccurringForm: {
+            frequency: {
+                label: 'Frequency',
+                elementType: 'select',
+                elementConfig: {
+                    options: [
+                        { value: 'MONTHLY', displayValue: 'Monthly' },
+                        { value: 'WEEKLY', displayValue: 'Weekly' }
+                    ]
+                },
+                value: 'MONTHLY'
+            },
+            interval: {
+                label: 'Interval',
+                elementType: 'input',
+                elementConfig: {
+                    type: 'number',
+                    min: 1,
+                    max: 100
+                },
+                value: 1
+            },
+            monday: {
+                label: 'Monday',
+                elementType: 'select',
+                elementConfig: {
+                    options: [
+                        { value: -1, displayValue: 'No Event' },
+                        { value: 0, displayValue: 'Every Monday' },
+                        { value: 1, displayValue: 'Every 1st Monday' },
+                        { value: 2, displayValue: 'Every 2nd Monday' },
+                        { value: 3, displayValue: 'Every 3rd Monday' },
+                        { value: 4, displayValue: 'Every 4th Monday' }
+                    ]
+                },
+                value: -1
+            },
+            continuesForever: {
+                label: 'Continues Forever',
+                elementType: 'input',
+                elementConfig: {
+                    type: 'checkbox',
+                    onClick: this.inputRecurringChangedHandler,
+                    defaultChecked: true
+                },
+                value: true
+            },
+            endDate: {
+                label: "End Date",
+                elementType: 'date',
+                elementConfig: {
+                    disabled: true
+                },
+                value: this.props.end
             }
         }
     };
@@ -69,6 +142,13 @@ class AddEvent extends Component {
         this.setState({ addForm: updatedForm });
     }
 
+    recurringDateTimeHandler = (event, inputId) => {
+        const updatedForm = { ...this.state.reccurringForm };
+        const updatedElement = { ...updatedForm[inputId] };
+        updatedElement.value = event;
+        updatedForm[inputId] = updatedElement;
+        this.setState({ reccurringForm: updatedForm });
+    }
 
     inputChangedHandler = (event, inputId) => {
         const updatedForm = { ...this.state.addForm };
@@ -78,14 +158,40 @@ class AddEvent extends Component {
         this.setState({ addForm: updatedForm });
     }
 
+    inputRecurringChangedHandler = (event, inputId) => {
+        const updatedForm = { ...this.state.reccurringForm };
+        const updatedElement = { ...updatedForm[inputId] };
+        if (inputId === 'continuesForever') {
+            let bool = event.target.value === 'true';
+            updatedElement.value = !bool;
+        } else {
+            updatedElement.value = event.target.value;
+        }
+        updatedForm[inputId] = updatedElement;
+        updatedForm.endDate.elementConfig.disabled = updatedForm.continuesForever.value;
+        this.setState({ reccurringForm: updatedForm });
+    }
+
     submitHandler = (evt) => {
         evt.preventDefault();
+        if (this.state.addForm.recurring.value === 'true') {
+            this.recurringEvent();
+        } else {
+            this.oneTimeEvent();
+        }
+    }
+
+    recurringEvent = () => {
+        console.log('made it recurring submit');
+    }
+
+    oneTimeEvent = () => {
         let idList = this.props.events.map(a => a.id)
         let newId = Math.max(...idList) + 1
         let event = {
             id: newId,
             title: this.state.addForm.title.value,
-            allDay: this.state.addForm.allDay.value === "true",
+            allDay: this.state.addForm.allDay.value == 'true',
             start: this.state.addForm.start.value,
             end: this.state.addForm.end.value,
             priority: this.state.addForm.priority.value
@@ -102,35 +208,68 @@ class AddEvent extends Component {
                 config: this.state.addForm[key]
             });
         }
+        let form = (<Aux>
+            {
+                formElementArray.map(formElement => (
+                    <Input
+                        changed={(event) => this.inputChangedHandler(event, formElement.id)}
+                        dateTimeChanged={(event) => this.dateTimeHandler(event, formElement.id)}
+                        key={formElement.id}
+                        elementId={formElement.id}
+                        elementType={formElement.config.elementType}
+                        elementConfig={formElement.config.elementConfig}
+                        value={formElement.config.value}
+                        label={formElement.config.label}
+                    //invalid={!formElement.config.valid}
+                    //shouldValidate={formElement.config.validation}
+                    //touched={formElement.config.touched} 
+                    />
+                ))
+            }
+        </Aux>);
 
-        let form = (<form onSubmit={this.submitHandler}>
-            {formElementArray.map(formElement => (
-                <Input
-                    changed={(event) => this.inputChangedHandler(event, formElement.id)}
-                    dateTimeChanged={(event) => this.dateTimeHandler(event, formElement.id)}
-                    key={formElement.id}
-                    elementId={formElement.id}
-                    elementType={formElement.config.elementType}
-                    elementConfig={formElement.config.elementConfig}
-                    value={formElement.config.value}
-                    label={formElement.config.label}
-                //invalid={!formElement.config.valid}
-                //shouldValidate={formElement.config.validation}
-                //touched={formElement.config.touched} 
-                />
-            ))}
-            <Button clicked={this.props.close}>CLOSE</Button>
+        const reccuringFormArray = [];
+        for (let key in this.state.reccurringForm) {
+            reccuringFormArray.push({
+                id: key,
+                config: this.state.reccurringForm[key]
+            });
+        }
+        let recurringForm = (<Aux>
+            {
+                reccuringFormArray.map(formElement => (
+                    <Input
+                        changed={(event) => this.inputRecurringChangedHandler(event, formElement.id)}
+                        dateTimeChanged={(event) => this.recurringDateTimeHandler(event, formElement.id)}
+                        key={formElement.id}
+                        elementId={formElement.id}
+                        elementType={formElement.config.elementType}
+                        elementConfig={formElement.config.elementConfig}
+                        value={formElement.config.value}
+                        label={formElement.config.label}
+                    //invalid={!formElement.config.valid}
+                    //shouldValidate={formElement.config.validation}
+                    //touched={formElement.config.touched} 
+                    />
+                ))
+            }
+        </Aux>);
 
-            <Button clicked={this.submitHandler}>ADD EVENT</Button>
-        </form>);
 
         return (
             <Aux>
                 <BackDrop show={this.state.popupOpen} />
                 <PopupBox>
-                    {form}
+                    <form onSubmit={this.submitHandler}>
+                        {form}
+                        {this.state.addForm.recurring.value === 'true'
+                            ? recurringForm
+                            : null}
+                        <Button clicked={this.props.close}>CLOSE</Button>
+                        <Button clicked={this.submitHandler}>ADD EVENT</Button>
+                    </form>
                 </PopupBox>
-            </Aux>
+            </Aux >
         );
     }
 }

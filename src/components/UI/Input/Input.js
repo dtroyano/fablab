@@ -1,5 +1,6 @@
 import React from 'react';
 import DateTimePicker from 'react-datetime-picker';
+import DatePicker from 'react-date-picker';
 
 import classes from './Input.module.css';
 
@@ -27,10 +28,10 @@ const input = (props) => {
                 </select>)
             break;
         case ('date'):
-            inputElement = <input id={props.elementId} type='date' value={props.value} onChange={props.changed} />
+            inputElement = <DatePicker id={props.elementId} value={props.value} onChange={props.dateTimeChanged}  {...props.elementConfig} />
             break;
         case ('datetime'):
-            inputElement = <DateTimePicker onChange={props.dateTimeChanged} value={props.value} id={props.elementId} disableClock={true} />
+            inputElement = <DateTimePicker onChange={props.dateTimeChanged} value={props.value} id={props.elementId} {...props.elementConfig} />
             break;
         default:
             inputElement = <input id={props.elementId} onChange={props.changed} className={inputClasses.join(' ')} {...props.elementConfig} value={props.value} />

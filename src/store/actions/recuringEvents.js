@@ -4,6 +4,36 @@ import axios from '../../axios-orders';
 import { Schedule } from '@rschedule/core/generators';
 import '@rschedule/standard-date-adapter/setup';
 
+
+export const addRecurring = (event) => {
+    return dispatch => {
+        let time = new Date();
+        time = new Date(time.setHours(time.getHours() - 14));
+        const rule = {
+            frequency: "WEEKLY",
+            byDayOfWeek: ["TU"],
+            start: time
+        };
+        const details = {
+            title: 'Recurring Event',
+            allDay: false,
+            length: 90,
+            priority: 0
+        };
+        const event = {
+            rule: rule,
+            details: details
+        };
+
+        axios.post('recurring.json', { event })
+            .then(res => {
+                console.log(res);
+                dispatch(recurringAdded(event));
+            });
+    }
+
+}
+
 export const recurringAdded = (event) => {
     return {
         type: actionTypes.ADD_RECURRING,
@@ -27,30 +57,6 @@ export const setRecurring = (events) => {
 
 export const recurringInit = (start, end) => {
     return dispatch => {
-        // let time = new Date();
-        // time = new Date(time.setHours(time.getHours() - 14));
-        // const rule = {
-        //     frequency: "WEEKLY",
-        //     byDayOfWeek: ["TU"],
-        //     start: time
-        // };
-        // const details = {
-        //     title: 'Recurring Event',
-        //     allDay: false,
-        //     length: 90,
-        //     priority: 0
-        // };
-        // const event = {
-        //     rule: rule,
-        //     details: details
-        // };
-
-        // axios.post('recurring.json', { event })
-        //     .then(res => {
-        //         console.log(res);
-        //     });
-
-
         axios.get('recurring.json')
             .then(res => {
                 const events = [];
