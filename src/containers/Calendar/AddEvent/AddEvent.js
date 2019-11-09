@@ -107,6 +107,103 @@ class AddEvent extends Component {
                         { value: 4, displayValue: 'Every 4th Monday' }
                     ]
                 },
+                dayOfWeek: true,
+                value: -1
+            },
+            tuesday: {
+                label: 'Tuesday',
+                elementType: 'select',
+                elementConfig: {
+                    options: [
+                        { value: -1, displayValue: 'No Event' },
+                        { value: 0, displayValue: 'Every Tuesday' },
+                        { value: 1, displayValue: 'Every 1st Tuesday' },
+                        { value: 2, displayValue: 'Every 2nd Tuesday' },
+                        { value: 3, displayValue: 'Every 3rd Tuesday' },
+                        { value: 4, displayValue: 'Every 4th Tuesday' }
+                    ]
+                },
+                dayOfWeek: true,
+                value: -1
+            },
+            wednesday: {
+                label: 'Wednesday',
+                elementType: 'select',
+                elementConfig: {
+                    options: [
+                        { value: -1, displayValue: 'No Event' },
+                        { value: 0, displayValue: 'Every Wednesday' },
+                        { value: 1, displayValue: 'Every 1st Wednesday' },
+                        { value: 2, displayValue: 'Every 2nd Wednesday' },
+                        { value: 3, displayValue: 'Every 3rd Wednesday' },
+                        { value: 4, displayValue: 'Every 4th Wednesday' }
+                    ]
+                },
+                dayOfWeek: true,
+                value: -1
+            },
+            thursday: {
+                label: 'Thursday',
+                elementType: 'select',
+                elementConfig: {
+                    options: [
+                        { value: -1, displayValue: 'No Event' },
+                        { value: 0, displayValue: 'Every Thursday' },
+                        { value: 1, displayValue: 'Every 1st Thursday' },
+                        { value: 2, displayValue: 'Every 2nd Thursday' },
+                        { value: 3, displayValue: 'Every 3rd Thursday' },
+                        { value: 4, displayValue: 'Every 4th Thursday' }
+                    ]
+                },
+                dayOfWeek: true,
+                value: -1
+            },
+            friday: {
+                label: 'Friday',
+                elementType: 'select',
+                elementConfig: {
+                    options: [
+                        { value: -1, displayValue: 'No Event' },
+                        { value: 0, displayValue: 'Every Friday' },
+                        { value: 1, displayValue: 'Every 1st Friday' },
+                        { value: 2, displayValue: 'Every 2nd Friday' },
+                        { value: 3, displayValue: 'Every 3rd Friday' },
+                        { value: 4, displayValue: 'Every 4th Friday' }
+                    ]
+                },
+                dayOfWeek: true,
+                value: -1
+            },
+            saturday: {
+                label: 'Saturday',
+                elementType: 'select',
+                elementConfig: {
+                    options: [
+                        { value: -1, displayValue: 'No Event' },
+                        { value: 0, displayValue: 'Every Saturday' },
+                        { value: 1, displayValue: 'Every 1st Saturday' },
+                        { value: 2, displayValue: 'Every 2nd Saturday' },
+                        { value: 3, displayValue: 'Every 3rd Saturday' },
+                        { value: 4, displayValue: 'Every 4th Saturday' }
+                    ]
+                },
+                dayOfWeek: true,
+                value: -1
+            },
+            sunday: {
+                label: 'Sunday',
+                elementType: 'select',
+                elementConfig: {
+                    options: [
+                        { value: -1, displayValue: 'No Event' },
+                        { value: 0, displayValue: 'Every Sunday' },
+                        { value: 1, displayValue: 'Every 1st Sunday' },
+                        { value: 2, displayValue: 'Every 2nd Sunday' },
+                        { value: 3, displayValue: 'Every 3rd Sunday' },
+                        { value: 4, displayValue: 'Every 4th Sunday' }
+                    ]
+                },
+                dayOfWeek: true,
                 value: -1
             },
             continuesForever: {
@@ -181,8 +278,60 @@ class AddEvent extends Component {
         }
     }
 
+    dayofWeekHandler = (day) => {
+        let dayName = '';
+        switch (day.label) {
+            case 'Monday': dayName = 'MO'; break;
+            case 'Tuesday': dayName = 'TU'; break;
+            case 'Wednesday': dayName = 'WE'; break;
+            case 'Thursday': dayName = 'TH'; break;
+            case 'Friday': dayName = 'FR'; break;
+            case 'Saturday': dayName = 'SA'; break;
+            case 'Sunday': dayName = 'SU'; break;
+            default: dayName = 'error'; break;
+        }
+        let value = parseInt(day.value);
+        if (value === 0) {
+            return dayName;
+        } else {
+            return [dayName, value];
+        }
+    }
+
     recurringEvent = () => {
         console.log('made it recurring submit');
+        let byDayofWeek = [];
+        for (let key in this.state.reccurringForm) {
+            if (this.state.reccurringForm[key].dayOfWeek) {
+                if (this.state.reccurringForm[key].value >= 0) {
+                    byDayofWeek.push(this.dayofWeekHandler(this.state.reccurringForm[key]));
+                }
+            }
+        }
+        console.log(byDayofWeek);
+        // const rule = {
+        //     frequency: this.state.reccurringForm.frequency.value,
+        //     byDayOfWeek: ["TU"],
+        //     start: time
+        // };
+        // const details = {
+        //     title: 'Recurring Event',
+        //     allDay: false,
+        //     length: 90,
+        //     priority: 0
+        // };
+        // const event = {
+        //     rule: rule,
+        //     details: details
+        // };
+        // let event = {
+        //     title: this.state.addForm.title.value,
+        //     allDay: this.state.addForm.allDay.value == 'true',
+        //     start: this.state.addForm.start.value,
+        //     end: this.state.addForm.end.value,
+        //     priority: this.state.addForm.priority.value
+        // }
+        //this.props.onRecurringAdded(event);
     }
 
     oneTimeEvent = () => {
