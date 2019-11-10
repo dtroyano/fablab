@@ -17,7 +17,6 @@ class MyCalendar extends Component {
     constructor(props) {
         super(props);
         this.moveEvent = this.moveEvent.bind(this);
-        this.newEvent = this.newEvent.bind(this);
     }
     state = {
         addEvent: false,
@@ -95,21 +94,6 @@ class MyCalendar extends Component {
             this.props.onEventAdded(event);
             this.props.onEventRemoved(evt.key, idx);
         }
-    }
-
-    newEvent(evt) {
-        this.setState({ showEvent: false });
-        let idList = this.props.events.map(a => a.id)
-        let newId = Math.max(...idList) + 1
-        let event = {
-            id: newId,
-            title: 'New Event',
-            allDay: evt.slots.length === 1,
-            start: evt.start,
-            end: evt.end,
-            priority: 0
-        }
-        this.props.onEventAdded(event);
     }
 
     findRecurringEvents = (range) => {

@@ -28,6 +28,23 @@ class ResourceCalendar extends Component {
         this.props.onInitCalendar();
     }
 
+    resizeEvent = ({ event: evt, start, end }) => {
+        this.setState({ showEvent: false });
+        if (!evt.recurring) {
+            const { events } = this.props;
+            const idx = events.indexOf(evt);
+            const event = {
+                title: evt.title,
+                allDay: evt.allDay,
+                resourceId: evt.resourceId,
+                start,
+                end
+            };
+            this.props.onEventAdded(event, 1);
+            this.props.onEventRemoved(evt.key, idx);
+        }
+    }
+
     triggerAddEvent = (event) => {
         const newEventData = {
             eventStart: event.start,
@@ -55,7 +72,8 @@ class ResourceCalendar extends Component {
                 close={this.removeAddEvent}
                 start={this.state.addEventData.eventStart}
                 end={this.state.addEventData.eventEnd}
-                allDay={this.state.addEventData.allDay} />;
+                allDay={this.state.addEventData.allDay}
+                resourceId={this.state.addEventData.resourceId} />;
         }
         return (
             <div>
@@ -65,19 +83,17 @@ class ResourceCalendar extends Component {
                     localizer={localizer}
                     defaultView={Views.WEEK}
                     events={this.props.events}
-                    //onEventResize={this.resizeEvent}
+                    onEventResize={this.resizeEvent}
                     //onEventDrop={this.moveEvent}
                     //onDragStart={console.log}
-                    //resizable
+                    resizable
                     onSelectSlot={this.triggerAddEvent}
                     //onSelectEvent={this.selectEvent}
                     resources={resourceMap}
                     resourceIdAccessor="resourceId"
                     resourceTitleAccessor="resourceTitle"
 
-                    style={{ height: 1000 }}
-                //onRangeChange={this.findRecurringEvents}
-                />
+                    style={{ height: 1000 }} />
             </div>
         );
     }
@@ -85,6 +101,7 @@ class ResourceCalendar extends Component {
 
 const mapDispatchToProps = dispatch => {
     return {
+        onEventAdded: (event, userId) => dispatch(actions.addResourceEvent(event, userId)),
         onEventRemoved: (key, idx) => dispatch(actions.removeResourceEvent(key, idx)),
         onInitCalendar: () => dispatch(actions.initResourceCalendar())
     }

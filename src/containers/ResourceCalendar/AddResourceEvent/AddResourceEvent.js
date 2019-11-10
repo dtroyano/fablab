@@ -20,7 +20,7 @@ class AddResourceEvent extends Component {
                     type: 'text',
                     placeholder: 'Title of Event'
                 },
-                value: ''
+                value: 'USERNAME'
             },
             start: {
                 label: "Start Time",
@@ -49,30 +49,57 @@ class AddResourceEvent extends Component {
                 },
                 value: this.props.allDay
             },
-            priority: {
-                label: "Event Priority",
+            resourceId: {
+                label: "Resource",
                 elementType: 'select',
                 elementConfig: {
                     options: [
-                        { value: '0', displayValue: 'Low' },
-                        { value: '1', displayValue: 'High' }
+                        { value: 1, displayValue: 'Laser Cutter' },
+                        { value: 2, displayValue: 'CNC' },
+                        { value: 3, displayValue: 'Vinyl Cutter' },
+                        { value: 4, displayValue: '3D Printer' }
                     ]
                 },
-                value: 0
-            },
-            recurring: {
-                label: "Is the Event Recurring?",
-                elementType: 'select',
-                elementConfig: {
-                    options: [
-                        { value: 'true', displayValue: 'Yes' },
-                        { value: 'false', displayValue: 'No' }
-                    ]
-                },
-                value: 'false'
+                value: this.props.resourceId
             }
         }
     }
+
+    inputChangedHandler = (event, inputId) => {
+        const updatedForm = { ...this.state.addForm };
+        const updatedElement = { ...updatedForm[inputId] };
+        updatedElement.value = event.target.value;
+        updatedForm[inputId] = updatedElement;
+        this.setState({ addForm: updatedForm });
+    }
+
+    dateTimeHandler = (event, inputId) => {
+        const updatedForm = { ...this.state.addForm };
+        const updatedElement = { ...updatedForm[inputId] };
+        updatedElement.value = event;
+        updatedForm[inputId] = updatedElement;
+        this.setState({ addForm: updatedForm });
+    }
+
+    submitHandler = (evt) => {
+        evt.preventDefault();
+        let idList = this.props.events.map(a => a.id)
+        let newId = Math.max(...idList) + 1
+        let event = {
+            id: newId,
+            title: this.state.addForm.title.value,
+            allDay: this.state.addForm.allDay.value === 'true',
+            start: this.state.addForm.start.value,
+            end: this.state.addForm.end.value,
+            resourceId: this.state.addForm.resourceId.value
+        }
+        if (this.props.eventInfo) {
+            this.props.onEventRemoved(this.props.eventInfo.key, this.props.eventInfo.idx)
+        }
+        this.props.onEventAdded(event, 1);
+        this.props.close();
+    }
+
     render() {
         const formElementArray = [];
         for (let key in this.state.addForm) {
