@@ -9,12 +9,14 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import calendarReducer from './store/reducers/calendar';
 import recurringReducer from './store/reducers/recurringEvents';
+import resourceCalendarReducer from './store/reducers/resourceCalendar';
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const rootReducer = combineReducers({
     calendar: calendarReducer,
-    recurring: recurringReducer
+    recurring: recurringReducer,
+    resourceCalendar: resourceCalendarReducer
 });
 
 const store = createStore(rootReducer, composeEnhancers(applyMiddleware(thunk)));
