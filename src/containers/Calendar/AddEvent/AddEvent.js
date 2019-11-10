@@ -72,7 +72,7 @@ class AddEvent extends Component {
                 value: 'false'
             }
         },
-        reccurringForm: {
+        recurringForm: {
             frequency: {
                 label: 'Frequency',
                 elementType: 'select',
@@ -231,8 +231,90 @@ class AddEvent extends Component {
         }
     };
 
-    componentDidUpdate() {
-        //console.log(this.state.addForm);
+    componentDidMount() {
+        if (this.props.eventInfo) {
+            console.log(this.state)
+            const updatedForm = { ...this.state.addForm };
+            const updatedTitle = { ...updatedForm.title };
+            updatedTitle.value = this.props.eventInfo.title;
+            updatedForm.title = updatedTitle;
+            const updatedPriority = { ...updatedForm.priority };
+            updatedPriority.value = this.props.eventInfo.priority;
+            updatedForm.priority = updatedPriority;
+            const updatedRecurring = { ...updatedForm.recurring };
+            updatedRecurring.value = this.props.eventInfo.recurring;
+            updatedForm.recurring = updatedRecurring;
+            this.setState({ addForm: updatedForm });
+
+            if (this.props.eventInfo.recurring === 'true') {
+                let updatedRecurring = { ...this.state.recurringForm };
+                const updatedFrequency = { ...updatedRecurring.frequency };
+                updatedFrequency.value = this.props.recurringInfo.frequency;
+                updatedRecurring.frequency = updatedFrequency;
+                const updatedInterval = { ...updatedRecurring.interval };
+                updatedInterval.value = this.props.recurringInfo.interval;
+                updatedRecurring.interval = updatedInterval;
+                this.props.recurringInfo.dayOfWeek.forEach(day => {
+                    updatedRecurring = this.dayofWeekUnpacker(day, updatedRecurring);
+                })
+                if (this.props.recurringInfo.end) {
+                    const updatedEndDate = { ...updatedRecurring.endDate };
+                    updatedEndDate.value = this.props.recurringInfo.end;
+                    updatedRecurring.endDate = updatedEndDate;
+                    const updatedContinues = { ...updatedRecurring.continuesForever };
+                    updatedContinues.value = false;
+                    updatedRecurring.continuesForever = updatedContinues;
+                }
+                this.setState({ recurringForm: updatedRecurring });
+            }
+        }
+    }
+
+    dayofWeekUnpacker = (day, form) => {
+        if (typeof day === 'string') {
+            day = [day, 0];
+        }
+        let updatedDay = {}
+        switch (day[0]) {
+            case 'MO':
+                updatedDay = { ...form.monday };
+                updatedDay.value = day[1];
+                form.monday = updatedDay;
+                console.log(form);
+                return form;
+            case 'TU':
+                updatedDay = { ...form.tuesday };
+                updatedDay.value = day[1];
+                form.tuesday = updatedDay;
+                return form;
+            case 'WE':
+                updatedDay = { ...form.wedneday };
+                updatedDay.value = day[1];
+                form.wedneday = updatedDay;
+                return form;
+            case 'TH':
+                updatedDay = { ...form.thursday };
+                updatedDay.value = day[1];
+                form.thursday = updatedDay;
+                return form;
+            case 'FR':
+                updatedDay = { ...form.friday };
+                updatedDay.value = day[1];
+                form.friday = updatedDay;
+                return form;
+            case 'SA':
+                updatedDay = { ...form.saturday };
+                updatedDay.value = day[1];
+                form.saturday = updatedDay;
+                return form;
+            case 'SU':
+                updatedDay = { ...form.sunday };
+                updatedDay.value = day[1];
+                form.sunday = updatedDay;
+                return form;
+            default:
+                return form;
+        }
     }
 
     dateTimeHandler = (event, inputId) => {
@@ -244,11 +326,11 @@ class AddEvent extends Component {
     }
 
     recurringDateTimeHandler = (event, inputId) => {
-        const updatedForm = { ...this.state.reccurringForm };
+        const updatedForm = { ...this.state.recurringForm };
         const updatedElement = { ...updatedForm[inputId] };
         updatedElement.value = event;
         updatedForm[inputId] = updatedElement;
-        this.setState({ reccurringForm: updatedForm });
+        this.setState({ recurringForm: updatedForm });
     }
 
     inputChangedHandler = (event, inputId) => {
@@ -260,7 +342,7 @@ class AddEvent extends Component {
     }
 
     inputRecurringChangedHandler = (event, inputId) => {
-        const updatedForm = { ...this.state.reccurringForm };
+        const updatedForm = { ...this.state.recurringForm };
         const updatedElement = { ...updatedForm[inputId] };
         if (inputId === 'continuesForever') {
             let bool = event.target.value === 'true';
@@ -270,7 +352,7 @@ class AddEvent extends Component {
         }
         updatedForm[inputId] = updatedElement;
         updatedForm.endDate.elementConfig.disabled = updatedForm.continuesForever.value;
-        this.setState({ reccurringForm: updatedForm });
+        this.setState({ recurringForm: updatedForm });
     }
 
     submitHandler = (evt) => {
@@ -305,21 +387,25 @@ class AddEvent extends Component {
     recurringEvent = () => {
         console.log('made it recurring submit');
         let byDayOfWeek = [];
-        for (let key in this.state.reccurringForm) {
-            if (this.state.reccurringForm[key].dayOfWeek) {
-                if (this.state.reccurringForm[key].value >= 0) {
-                    byDayOfWeek.push(this.dayofWeekHandler(this.state.reccurringForm[key]));
+        for (let key in this.state.recurringForm) {
+            if (this.state.recurringForm[key].dayOfWeek) {
+                if (this.state.recurringForm[key].value >= 0) {
+                    byDayOfWeek.push(this.dayofWeekHandler(this.state.recurringForm[key]));
                 }
             }
         }
-        const length = this.state.addForm.end.value.getMinutes() - this.state.addForm.start.value.getMinutes();
+        let diff = (this.state.addForm.end.value.getTime() - this.state.addForm.start.value.getTime()) / 1000;
+        diff /= 60;
+        const length = Math.abs(Math.round(diff));
+        console.log(length);
         const rule = {
-            frequency: this.state.reccurringForm.frequency.value,
+            frequency: this.state.recurringForm.frequency.value,
+            interval: parseInt(this.state.recurringForm.interval.value),
             byDayOfWeek: byDayOfWeek,
             start: this.state.addForm.start.value
         };
-        if (!this.state.reccurringForm.continuesForever.value) {
-            rule.end = this.state.reccurringForm.endDate.value;
+        if (!this.state.recurringForm.continuesForever.value) {
+            rule.end = this.state.recurringForm.endDate.value;
         }
         const details = {
             title: this.state.addForm.title.value,
@@ -331,8 +417,16 @@ class AddEvent extends Component {
             rule: rule,
             details: details
         };
-        console.log(event);
+        if (this.props.eventInfo) {
+            if (this.props.eventInfo.recurring === 'true') {
+                this.props.onRecurringRemoved(this.props.eventInfo.key, this.state.currentView.start, this.state.currentView.end);
+            } else {
+                this.props.onEventRemoved(this.props.eventInfo.key, this.props.eventInfo.idx)
+            }
+        }
         this.props.onRecurringAdded(event, this.state.currentView.start, this.state.currentView.end);
+        this.props.close();
+
     }
 
     oneTimeEvent = () => {
@@ -346,7 +440,15 @@ class AddEvent extends Component {
             end: this.state.addForm.end.value,
             priority: this.state.addForm.priority.value
         }
+        if (this.props.eventInfo) {
+            if (this.props.eventInfo.recurring === 'true') {
+                this.props.onRecurringRemoved(this.props.eventInfo.key, this.state.currentView.start, this.state.currentView.end);
+            } else {
+                this.props.onEventRemoved(this.props.eventInfo.key, this.props.eventInfo.idx)
+            }
+        }
         this.props.onEventAdded(event);
+        this.props.close();
     }
 
 
@@ -379,10 +481,10 @@ class AddEvent extends Component {
         </Aux>);
 
         const reccuringFormArray = [];
-        for (let key in this.state.reccurringForm) {
+        for (let key in this.state.recurringForm) {
             reccuringFormArray.push({
                 id: key,
-                config: this.state.reccurringForm[key]
+                config: this.state.recurringForm[key]
             });
         }
         let recurringForm = (<Aux>
@@ -427,7 +529,10 @@ class AddEvent extends Component {
 const mapDispatchToProps = dispatch => {
     return {
         onEventAdded: (event) => dispatch(actions.addEvent(event)),
-        onRecurringAdded: (event, start, end) => dispatch(actions.addRecurring(event, start, end))
+        onEventRemoved: (key, idx) => dispatch(actions.removeEvent(key, idx)),
+        onRecurringAdded: (event, start, end) => dispatch(actions.addRecurring(event, start, end)),
+        onRecurringRemoved: (key, start, end) => dispatch(actions.removeRecurring(key, start, end))
+
     }
 }
 

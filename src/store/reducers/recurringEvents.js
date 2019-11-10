@@ -1,7 +1,8 @@
 import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
-    events: []
+    events: [],
+    updateEvent: []
 };
 
 const reducer = (state = initialState, action) => {
@@ -11,6 +12,11 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 events: action.events
             };
+        case actionTypes.RECURRING_FETCHED:
+            return {
+                ...state,
+                updateEvent: action.event
+            }
         case actionTypes.ADD_RECURRING:
             return state;
         case actionTypes.REMOVE_RECURRING:

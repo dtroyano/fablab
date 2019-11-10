@@ -16,6 +16,36 @@ export const addRecurring = (event, start, end) => {
 
 }
 
+
+export const removeRecurring = (key, start, end) => {
+    return dispatch => {
+        axios.delete(`recurring/${key}.json`)
+            .then(res => {
+                dispatch(recurringInit(start, end));
+            })
+            .catch(err => {
+                console.log('fucked up removing')
+            })
+    }
+};
+
+export const recurringFetched = (event) => {
+    return {
+        type: actionTypes.RECURRING_FETCHED,
+        event: event
+    }
+}
+
+export const fetchRecurring = (key) => {
+    return dispatch => {
+        axios.get(`recurring/${key}.json`)
+            .then(res => {
+                console.log(res.data.event);
+                dispatch(recurringFetched(res.data.event));
+            });
+    }
+}
+
 export const recurringAdded = (event) => {
     //CURRENTLY IS NEVER CALLED ADD ERROR FUNCTIONALITY LATER
     return {
@@ -25,6 +55,7 @@ export const recurringAdded = (event) => {
 }
 
 export const recurringRemoved = (event) => {
+    //CURRENTLY IS NEVER CALL ADD ERROR FUNCTIONALITY LATER
     return {
         type: actionTypes.REMOVE_RECURRING,
         event: event

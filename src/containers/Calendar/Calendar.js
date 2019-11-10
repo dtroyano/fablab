@@ -8,6 +8,7 @@ import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop'
 import axios from '../../axios-orders';
 import moment from 'moment';
 
+import CalendarPopUp from '../../components/UI/CalendarPopUp/CalendarPopUp';
 import AddEvent from './AddEvent/AddEvent';
 
 const DragAndDropCalendar = withDragAndDrop(Calendar);
@@ -20,12 +21,29 @@ class MyCalendar extends Component {
     }
     state = {
         addEvent: false,
+        updateEvent: false,
         eventStart: new Date(),
         eventEnd: new Date(),
         allDay: false,
         currentView: {
             start: new Date(),
             end: new Date()
+        },
+        showEvent: false,
+        popUp: {
+            title: '',
+            time: '',
+            key: '',
+            recurring: '',
+            idx: 0,
+            location: {
+                x: 0,
+                y: 0
+            }
+        },
+        mouseLocation: {
+            x: 0,
+            y: 0
         }
     }
 
@@ -39,6 +57,7 @@ class MyCalendar extends Component {
     }
 
     moveEvent({ event: evt, start, end, isAllDay: droppedOnAllDaySlot }) {
+        this.setState({ showEvent: false });
         if (!evt.recurring) {
             const { events } = this.props;
             const idx = events.indexOf(evt);
@@ -62,6 +81,7 @@ class MyCalendar extends Component {
     }
 
     resizeEvent = ({ event: evt, start, end }) => {
+        this.setState({ showEvent: false });
         if (!evt.recurring) {
             const { events } = this.props;
             const idx = events.indexOf(evt);
@@ -78,6 +98,7 @@ class MyCalendar extends Component {
     }
 
     newEvent(evt) {
+        this.setState({ showEvent: false });
         let idList = this.props.events.map(a => a.id)
         let newId = Math.max(...idList) + 1
         let event = {
@@ -92,6 +113,7 @@ class MyCalendar extends Component {
     }
 
     findRecurringEvents = (range) => {
+        this.setState({ showEvent: false });
         let start = new Date();
         let end = new Date();
         if (Array.isArray(range)) {
@@ -111,7 +133,64 @@ class MyCalendar extends Component {
     }
 
     removeAddEvent = () => {
-        this.setState({ addEvent: false });
+        this.setState({ addEvent: false, updateEvent: false });
+    }
+
+    closePopUp = () => {
+        this.setState({ showEvent: false });
+    }
+
+    selectEvent = (event) => {
+        const newLocation = {
+            x: this.state.mouseLocation.x - 100,
+            y: this.state.mouseLocation.y - 125
+        }
+        const startTime = moment(event.start);
+        let time = '';
+        if (event.allDay) {
+            time = startTime.format('dddd, MMMM Do YYYY');
+        } else {
+            const endTime = moment(event.end);
+            if (event.start.getDate() === event.end.getDate()) {
+                time = `${startTime.format('dddd, MMMM Do YYYY, h:mm a')} - ${endTime.format('h:mm a')}`;
+            } else {
+                time = `${startTime.format('dddd, MMMM Do YYYY, h:mm a')} - ${endTime.format('dddd, MMMM Do YYYY, h:mm a')}`;
+            }
+        }
+        const { events } = this.props;
+        const idx = events.indexOf(event);
+        this.setState({
+            showEvent: true,
+            popUp: {
+                title: event.title,
+                time: time,
+                location: newLocation,
+                idx: idx,
+                key: event.key,
+                recurring: event.recurring
+            }
+        });
+        if (event.recurring) {
+            this.props.fetchRecurringEvent(event.key);
+        }
+    }
+
+    _OnMouseMove(e) {
+        this.setState({ mouseLocation: { x: e.pageX, y: e.pageY } });
+    }
+
+    removeEvent = () => {
+        this.setState({ showEvent: false });
+        if (this.state.popUp.recurring) {
+            this.props.onRecurringRemoved(this.state.popUp.key, this.state.currentView.start, this.state.currentView.end);
+        } else {
+            this.props.onEventRemoved(this.state.popUp.key, this.state.popUp.idx);
+        }
+    }
+
+    updateEvent = () => {
+        this.setState({ showEvent: false, updateEvent: true });
+
     }
 
     render() {
@@ -127,9 +206,66 @@ class MyCalendar extends Component {
                 viewEnd={this.state.currentView.end} />;
         }
 
+        if (this.state.updateEvent) {
+            const idx = this.state.popUp.idx;
+            let eventInfo = {};
+            let recurringInfo = {};
+            if (this.state.popUp.recurring) {
+                if (this.props.recurringInformation.rule) {
+                    let end = new Date(this.props.recurringInformation.rule.start);
+                    end.setMinutes(end.getMinutes() + this.props.recurringInformation.details.length);
+                    eventInfo = {
+                        title: this.props.recurringInformation.details.title,
+                        priority: this.props.recurringInformation.details.priority,
+                        recurring: 'true',
+                        start: new Date(this.props.recurringInformation.rule.start),
+                        end: end,
+                        allDay: this.props.recurringInformation.details.allDay,
+                        key: this.state.popUp.key
+                    };
+                    recurringInfo = {
+                        frequency: this.props.recurringInformation.rule.frequency,
+                        interval: this.props.recurringInformation.rule.interval,
+                        dayOfWeek: this.props.recurringInformation.rule.byDayOfWeek
+                    };
+                    if (this.props.recurringInformation.rule.end) {
+                        recurringInfo.end = this.props.recurringInformation.rule.end;
+                    }
+                }
+            } else {
+                eventInfo = {
+                    title: this.props.events[idx].title,
+                    priority: this.props.events[idx].priority,
+                    recurring: 'false',
+                    start: this.props.events[idx].start,
+                    end: this.props.events[idx].end,
+                    allDay: this.props.events[idx].allDay,
+                    key: this.state.popUp.key,
+                    idx: idx
+                }
+            }
+            if (eventInfo.title) {
+                addEvent = <AddEvent
+                    close={this.removeAddEvent}
+                    start={eventInfo.start}
+                    end={eventInfo.end}
+                    allDay={eventInfo.allDay}
+                    viewStart={this.state.currentView.start}
+                    viewEnd={this.state.currentView.end}
+                    eventInfo={eventInfo}
+                    recurringInfo={recurringInfo} />;
+            }
+        }
+
         return (
-            <div>
+            <div onMouseMove={this._OnMouseMove.bind(this)} >
                 {addEvent}
+                <CalendarPopUp
+                    popUpInformation={this.state.popUp}
+                    showEvent={this.state.showEvent}
+                    close={this.closePopUp}
+                    removeEvent={this.removeEvent}
+                    updateEvent={this.updateEvent} />
                 <DragAndDropCalendar
                     selectable
                     localizer={localizer}
@@ -140,7 +276,7 @@ class MyCalendar extends Component {
                     onDragStart={console.log}
                     resizable
                     onSelectSlot={this.triggerAddEvent}
-                    onSelectEvent={event => alert(event.title)}
+                    onSelectEvent={this.selectEvent}
                     style={{ height: 1000 }}
                     onRangeChange={this.findRecurringEvents}
                     eventPropGetter={event => ({
@@ -161,14 +297,17 @@ const mapDispatchToProps = dispatch => {
         onEventAdded: (event) => dispatch(actions.addEvent(event)),
         onEventRemoved: (key, idx) => dispatch(actions.removeEvent(key, idx)),
         onInitCalendar: () => dispatch(actions.initCalendar()),
-        onInitRecurring: (start, end) => dispatch(actions.recurringInit(start, end))
+        onInitRecurring: (start, end) => dispatch(actions.recurringInit(start, end)),
+        onRecurringRemoved: (key, start, end) => dispatch(actions.removeRecurring(key, start, end)),
+        fetchRecurringEvent: (key) => dispatch(actions.fetchRecurring(key))
     }
 }
 
 const mapStateToProps = state => {
     return {
         events: state.calendar.events,
-        recurringEvents: state.recurring.events
+        recurringEvents: state.recurring.events,
+        recurringInformation: state.recurring.updateEvent
     }
 }
 
