@@ -91,12 +91,14 @@ class AddResourceEvent extends Component {
             allDay: this.state.addForm.allDay.value === 'true',
             start: this.state.addForm.start.value,
             end: this.state.addForm.end.value,
-            resourceId: this.state.addForm.resourceId.value
+            resourceId: this.state.addForm.resourceId.value,
+            userId: 1
+
         }
         if (this.props.eventInfo) {
             this.props.onEventRemoved(this.props.eventInfo.key, this.props.eventInfo.idx)
         }
-        this.props.onEventAdded(event, 1);
+        this.props.onEventAdded(event);
         this.props.close();
     }
 
@@ -144,7 +146,7 @@ class AddResourceEvent extends Component {
 }
 const mapDispatchToProps = dispatch => {
     return {
-        onEventAdded: (event, userId) => dispatch(actions.addResourceEvent(event, userId)),
+        onEventAdded: (event) => dispatch(actions.addResourceEvent(event)),
         onEventRemoved: (key, idx) => dispatch(actions.removeResourceEvent(key, idx)),
     }
 }

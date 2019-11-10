@@ -15,7 +15,7 @@ const reducer = (state = initialState, action) => {
                 end: action.event.end,
                 allDay: action.event.allDay,
                 key: action.key,
-                userId: action.userId
+                userId: action.event.userId
             }
             return {
                 ...state,

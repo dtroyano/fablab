@@ -1,20 +1,19 @@
 import * as actionTypes from './actionTypes';
 import axios from '../../axios-orders';
 
-export const resourceEventAdded = (event, key, userId) => {
+export const resourceEventAdded = (event, key) => {
     return {
         type: actionTypes.ADD_RESOURCE_EVENT,
         event: event,
-        key: key,
-        userId: userId
+        key: key
     };
 };
 
-export const addResourceEvent = (event, userId) => {
+export const addResourceEvent = (event) => {
     return dispatch => {
         axios.post('resourceCalendar/events.json', { event })
             .then(res => {
-                dispatch(resourceEventAdded(event, res.data.name, userId));
+                dispatch(resourceEventAdded(event, res.data.name));
             });
     }
 }

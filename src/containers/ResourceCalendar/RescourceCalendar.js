@@ -9,6 +9,7 @@ import axios from '../../axios-orders';
 import moment from 'moment';
 
 import AddRescourceEvent from './AddResourceEvent/AddResourceEvent';
+import CalendarPopUp from '../../components/UI/CalendarPopUp/CalendarPopUp';
 
 const DragAndDropCalendar = withDragAndDrop(Calendar);
 
@@ -21,6 +22,22 @@ class ResourceCalendar extends Component {
             eventEnd: new Date(),
             resourceId: 0,
             allDay: false
+        },
+        showEvent: false,
+        popUp: {
+            title: '',
+            time: '',
+            key: '',
+            resourceId: 1,
+            idx: 0,
+            location: {
+                x: 0,
+                y: 0
+            }
+        },
+        mouseLocation: {
+            x: 0,
+            y: 0
         }
     }
 
@@ -37,12 +54,18 @@ class ResourceCalendar extends Component {
                 title: evt.title,
                 allDay: evt.allDay,
                 resourceId: evt.resourceId,
+                userId: 1,
                 start,
                 end
             };
-            this.props.onEventAdded(event, 1);
+            this.props.onEventAdded(event);
             this.props.onEventRemoved(evt.key, idx);
         }
+    }
+
+    removeEvent = () => {
+        this.setState({ showEvent: false });
+        this.props.onEventRemoved(this.state.popUp.key, this.state.popUp.idx);
     }
 
     triggerAddEvent = (event) => {
@@ -56,6 +79,46 @@ class ResourceCalendar extends Component {
     }
     removeAddEvent = () => {
         this.setState({ addEvent: false, updateEvent: false });
+    }
+
+    closePopUp = () => {
+        this.setState({ showEvent: false });
+    }
+
+    selectEvent = (event) => {
+        const newLocation = {
+            x: this.state.mouseLocation.x - 100,
+            y: this.state.mouseLocation.y - 125
+        }
+        const startTime = moment(event.start);
+        let time = '';
+        if (event.allDay) {
+            time = startTime.format('dddd, MMMM Do YYYY');
+        } else {
+            const endTime = moment(event.end);
+            if (event.start.getDate() === event.end.getDate()) {
+                time = `${startTime.format('dddd, MMMM Do YYYY, h:mm a')} - ${endTime.format('h:mm a')}`;
+            } else {
+                time = `${startTime.format('dddd, MMMM Do YYYY, h:mm a')} - ${endTime.format('dddd, MMMM Do YYYY, h:mm a')}`;
+            }
+        }
+        const { events } = this.props;
+        const idx = events.indexOf(event);
+        this.setState({
+            showEvent: true,
+            popUp: {
+                title: event.title,
+                time: time,
+                location: newLocation,
+                idx: idx,
+                key: event.key,
+                resourceId: event.resourceId
+            }
+        });
+    }
+
+    _OnMouseMove(e) {
+        this.setState({ mouseLocation: { x: e.pageX, y: e.pageY } });
     }
 
     render() {
@@ -76,8 +139,14 @@ class ResourceCalendar extends Component {
                 resourceId={this.state.addEventData.resourceId} />;
         }
         return (
-            <div>
+            <div onMouseMove={this._OnMouseMove.bind(this)} >
                 {addEvent}
+                <CalendarPopUp
+                    popUpInformation={this.state.popUp}
+                    showEvent={this.state.showEvent}
+                    close={this.closePopUp}
+                    removeEvent={this.removeEvent}
+                    updateEvent={this.updateEvent} />
                 <DragAndDropCalendar
                     selectable
                     localizer={localizer}
@@ -88,20 +157,20 @@ class ResourceCalendar extends Component {
                     //onDragStart={console.log}
                     resizable
                     onSelectSlot={this.triggerAddEvent}
-                    //onSelectEvent={this.selectEvent}
+                    onSelectEvent={this.selectEvent}
                     resources={resourceMap}
                     resourceIdAccessor="resourceId"
                     resourceTitleAccessor="resourceTitle"
 
                     style={{ height: 1000 }} />
-            </div>
+            </div >
         );
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        onEventAdded: (event, userId) => dispatch(actions.addResourceEvent(event, userId)),
+        onEventAdded: (event) => dispatch(actions.addResourceEvent(event)),
         onEventRemoved: (key, idx) => dispatch(actions.removeResourceEvent(key, idx)),
         onInitCalendar: () => dispatch(actions.initResourceCalendar())
     }
