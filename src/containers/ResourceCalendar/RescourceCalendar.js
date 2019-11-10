@@ -8,6 +8,8 @@ import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop'
 import axios from '../../axios-orders';
 import moment from 'moment';
 
+import Button from '../../components/UI/Button/Button';
+import ChangeResources from './ChangeResources/ChangeResources';
 import AddRescourceEvent from './AddResourceEvent/AddResourceEvent';
 import CalendarPopUp from '../../components/UI/CalendarPopUp/CalendarPopUp';
 
@@ -17,6 +19,7 @@ class ResourceCalendar extends Component {
     state = {
         addEvent: false,
         updateEvent: false,
+        changeResources: false,
         addEventData: {
             eventStart: new Date(),
             eventEnd: new Date(),
@@ -68,6 +71,10 @@ class ResourceCalendar extends Component {
         this.props.onEventRemoved(this.state.popUp.key, this.state.popUp.idx);
     }
 
+    updateEvent = () => {
+        this.setState({ showEvent: false, updateEvent: true });
+    }
+
     triggerAddEvent = (event) => {
         const newEventData = {
             eventStart: event.start,
@@ -117,12 +124,21 @@ class ResourceCalendar extends Component {
         });
     }
 
+    changeResourcesShow = () => {
+        this.setState({ changeResources: !this.state.changeResources });
+    }
+
     _OnMouseMove(e) {
         this.setState({ mouseLocation: { x: e.pageX, y: e.pageY } });
     }
 
     render() {
         const localizer = momentLocalizer(moment);
+        let changeResources = null;
+        if (this.state.changeResources) {
+            changeResources = <ChangeResources
+                close={this.changeResourcesShow} />
+        }
         const resourceMap = [
             { resourceId: 1, resourceTitle: 'Laser Cutter' },
             { resourceId: 2, resourceTitle: 'CNC' },
@@ -138,9 +154,34 @@ class ResourceCalendar extends Component {
                 allDay={this.state.addEventData.allDay}
                 resourceId={this.state.addEventData.resourceId} />;
         }
+        if (this.state.updateEvent) {
+            const idx = this.state.popUp.idx;
+            let eventInfo = {};
+            eventInfo = {
+                title: this.props.events[idx].title,
+                resourceId: this.props.events[idx].resourceId,
+                start: this.props.events[idx].start,
+                end: this.props.events[idx].end,
+                allDay: this.props.events[idx].allDay,
+                key: this.state.popUp.key,
+                idx: idx
+            };
+
+            if (eventInfo.title) {
+                addEvent = <AddRescourceEvent
+                    close={this.removeAddEvent}
+                    start={eventInfo.start}
+                    end={eventInfo.end}
+                    allDay={eventInfo.allDay}
+                    resourceId={eventInfo.resourceId}
+                    eventInfo={eventInfo} />;
+            }
+        }
         return (
             <div onMouseMove={this._OnMouseMove.bind(this)} >
+                {changeResources}
                 {addEvent}
+                <Button clicked={this.changeResourcesShow}>CHANGE RESOURCES</Button>
                 <CalendarPopUp
                     popUpInformation={this.state.popUp}
                     showEvent={this.state.showEvent}

@@ -65,6 +65,16 @@ class AddResourceEvent extends Component {
         }
     }
 
+    componentDidMount() {
+        if (this.props.eventInfo) {
+            const updatedForm = { ...this.state.addForm };
+            const updatedTitle = { ...updatedForm.title };
+            updatedTitle.value = this.props.eventInfo.title;
+            updatedForm.title = updatedTitle;
+            this.setState({ addForm: updatedForm });
+        }
+    }
+
     inputChangedHandler = (event, inputId) => {
         const updatedForm = { ...this.state.addForm };
         const updatedElement = { ...updatedForm[inputId] };
@@ -91,7 +101,7 @@ class AddResourceEvent extends Component {
             allDay: this.state.addForm.allDay.value === 'true',
             start: this.state.addForm.start.value,
             end: this.state.addForm.end.value,
-            resourceId: this.state.addForm.resourceId.value,
+            resourceId: parseInt(this.state.addForm.resourceId.value),
             userId: 1
 
         }
