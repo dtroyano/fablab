@@ -1,8 +1,7 @@
 import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
-    events: [],
-    resources: []
+    events: []
 };
 
 const reducer = (state = initialState, action) => {

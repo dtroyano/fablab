@@ -46,6 +46,7 @@ class ResourceCalendar extends Component {
 
     componentDidMount() {
         this.props.onInitCalendar();
+        this.props.onInitResources();
     }
 
     resizeEvent = ({ event: evt, start, end }) => {
@@ -93,6 +94,7 @@ class ResourceCalendar extends Component {
     }
 
     selectEvent = (event) => {
+        console.log(this.props);
         const newLocation = {
             x: this.state.mouseLocation.x - 100,
             y: this.state.mouseLocation.y - 125
@@ -135,16 +137,12 @@ class ResourceCalendar extends Component {
     render() {
         const localizer = momentLocalizer(moment);
         let changeResources = null;
+
         if (this.state.changeResources) {
             changeResources = <ChangeResources
-                close={this.changeResourcesShow} />
+                close={this.changeResourcesShow}
+                resources={this.props.resources} />
         }
-        const resourceMap = [
-            { resourceId: 1, resourceTitle: 'Laser Cutter' },
-            { resourceId: 2, resourceTitle: 'CNC' },
-            { resourceId: 3, resourceTitle: 'Vinyl Cutter' },
-            { resourceId: 4, resourceTitle: '3D Printer' },
-        ]
         let addEvent = null;
         if (this.state.addEvent) {
             addEvent = <AddRescourceEvent
@@ -199,9 +197,9 @@ class ResourceCalendar extends Component {
                     resizable
                     onSelectSlot={this.triggerAddEvent}
                     onSelectEvent={this.selectEvent}
-                    resources={resourceMap}
-                    resourceIdAccessor="resourceId"
-                    resourceTitleAccessor="resourceTitle"
+                    resources={this.props.resources}
+                    resourceIdAccessor="id"
+                    resourceTitleAccessor="name"
 
                     style={{ height: 1000 }} />
             </div >
@@ -213,14 +211,15 @@ const mapDispatchToProps = dispatch => {
     return {
         onEventAdded: (event) => dispatch(actions.addResourceEvent(event)),
         onEventRemoved: (key, idx) => dispatch(actions.removeResourceEvent(key, idx)),
-        onInitCalendar: () => dispatch(actions.initResourceCalendar())
+        onInitCalendar: () => dispatch(actions.initResourceCalendar()),
+        onInitResources: () => dispatch(actions.initResources())
     }
 }
 
 const mapStateToProps = state => {
     return {
         events: state.resourceCalendar.events,
-        resources: state.resourceCalendar.resources
+        resources: state.resources.resources
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(ResourceCalendar, axios);
