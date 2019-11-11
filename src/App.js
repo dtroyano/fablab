@@ -9,11 +9,13 @@ import Contact from './components/Contact/Contact';
 import HomePage from './components/HomePage/HomePage';
 import Layout from './containers/Layout/Layout';
 import ResourceCalendar from './containers/ResourceCalendar/RescourceCalendar';
+import BlogHomePage from './containers/Blog/Read/Index';
 
 function App() {
   return (
     <Layout>
       <Switch>
+        <Route path='/blog' exact component={BlogHomePage} />
         <Route path='/reserveEquipment' exact component={ResourceCalendar} />
         <Route path='/calendar' exact component={MyCalendar} />
         <Route path='/class' exact component={BookClass} />

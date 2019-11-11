@@ -15,3 +15,7 @@ export const SET_RESOURCE_CALENDAR = 'SET_RESOURCE_CALENDAR';
 export const UPDATE_RESOURCES = 'UPDATE_RESOURCES';
 export const SET_RESOURCES = 'SET_RESOURCES';
 
+export const INIT_BLOG = 'INIT_BLOG';
+export const ADD_BLOG = 'ADD_BLOG';
+export const UPDATE_BLOG = 'UPDATE_BLOG';
+export const REMOVE_BLOG = 'REMOVE_BLOG';
