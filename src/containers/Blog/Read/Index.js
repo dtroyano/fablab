@@ -13,9 +13,13 @@ class Index extends Component {
         this.props.onInitBlog();
     }
 
-    loadEntry = (id) => {
-        console.log(id)
-        this.props.onGetBlog(id);
+    state = {
+        entry: {},
+        loaded: false
+    }
+
+    loadEntry = (entry) => {
+        this.setState({ entry: entry, loaded: true });
     }
 
     render() {
@@ -34,7 +38,7 @@ class Index extends Component {
                     blogEntriesArray.map(entry => {
                         return (
                             <div>
-                                <h1><Link onClick={() => this.loadEntry(entry.id)} to={'/blog/' + entry.id}>{entry.entry.title.rendered}</Link></h1>
+                                <h1><Link onClick={() => this.loadEntry(entry.entry)} to={'/blog/' + entry.id}>{entry.entry.title.rendered}</Link></h1>
                                 <p>{/*entry.content*/}</p>
                             </div>
                         )
@@ -42,10 +46,21 @@ class Index extends Component {
                 }
             </Aux>)
         }
+        let entry = (
+            <div>LOADING</div>
+        );
+        if (this.state.loaded) {
+            entry = (
+                <BlogEntry
+                    loaded={this.state.loaded}
+                    entry={this.state.entry} />
+
+            );
+        }
         return (
             <Switch>
                 <Route path={`${match.path}/:id`}>
-                    <BlogEntry loaded={this.props.loaded} entry={this.props.entry} />
+                    {entry}
                 </Route>
                 <Route path={`${match.path}`}>
                     <div>
