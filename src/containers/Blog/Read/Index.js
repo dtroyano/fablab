@@ -11,6 +11,9 @@ class Index extends Component {
     constructor(props) {
         super(props);
         this.props.onInitBlog();
+        if (!this.state.loaded && this.props.match.params.id) {
+            this.setEntry(this.props.match.params.id)
+        }
     }
 
     state = {
@@ -18,12 +21,15 @@ class Index extends Component {
         loaded: false
     }
 
+    setEntry = (id) => {
+        this.props.onGetBlog(id);
+    }
+
     loadEntry = (entry) => {
         this.setState({ entry: entry, loaded: true });
     }
 
     render() {
-        const { match } = this.props;
         const blogEntriesArray = [];
         for (let i = 0; i < this.props.blogEntries.length - 1; i++) {
             blogEntriesArray.push({
@@ -57,15 +63,20 @@ class Index extends Component {
 
             );
         }
+        if (this.props.loaded) {
+            entry = (
+                <BlogEntry
+                    loaded={this.props.loaded}
+                    entry={this.props.entry} />
+            );
+        }
         return (
             <Switch>
-                <Route path={`${match.path}/:id`}>
+                <Route exact path={'/blog/:id'}>
                     {entry}
                 </Route>
-                <Route path={`${match.path}`}>
-                    <div>
-                        {blog}
-                    </div>
+                <Route exact path={'/blog/'}>
+                    {blog}
                 </Route>
             </Switch>
         );

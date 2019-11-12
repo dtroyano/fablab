@@ -2,7 +2,8 @@ import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
     blog: {},
-    entry: {}
+    entry: {},
+    loaded: false
 }
 
 const reducer = (state = initialState, action) => {
