@@ -10,8 +10,8 @@ const calendarPopUp = (props) => {
         className = classes.CalendarPopUp;
     }
     let resource = null;
-    if (props.popUpInformation.resourceId) {
-        resource = (<Aux><h4>{props.popUpInformation.resourceId}</h4> <br /></Aux>)
+    if (props.popUpInformation.resource) {
+        resource = (<Aux><h4>{props.popUpInformation.resource}</h4> <br /></Aux>)
     }
     //const options = {weekday: 'short', month: 'long',}
     //const start = `${props.popUpInformation.start.toDateString()} ${props.popUpInformation.start.toString()}`;

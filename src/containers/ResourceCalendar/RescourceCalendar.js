@@ -32,6 +32,7 @@ class ResourceCalendar extends Component {
             time: '',
             key: '',
             resourceId: 1,
+            resource: '',
             idx: 0,
             location: {
                 x: 0,
@@ -94,7 +95,6 @@ class ResourceCalendar extends Component {
     }
 
     selectEvent = (event) => {
-        console.log(this.props);
         const newLocation = {
             x: this.state.mouseLocation.x - 100,
             y: this.state.mouseLocation.y - 125
@@ -113,6 +113,7 @@ class ResourceCalendar extends Component {
         }
         const { events } = this.props;
         const idx = events.indexOf(event);
+        console.log(event);
         this.setState({
             showEvent: true,
             popUp: {
@@ -121,9 +122,21 @@ class ResourceCalendar extends Component {
                 location: newLocation,
                 idx: idx,
                 key: event.key,
+                resource: this.findResourceName(event.resourceId),
                 resourceId: event.resourceId
             }
         });
+    }
+
+    findResourceName = (id) => {
+        let name = "";
+        for (let i = 0; i < this.props.resources.length; i++) {
+            if (this.props.resources[i].id === id) {
+                name = this.props.resources[i].name;
+                break;
+            }
+        }
+        return name;
     }
 
     changeResourcesShow = () => {
@@ -157,7 +170,7 @@ class ResourceCalendar extends Component {
             let eventInfo = {};
             eventInfo = {
                 title: this.props.events[idx].title,
-                resourceId: this.props.events[idx].resourceId,
+                resource: this.props.events[idx].resourceId,
                 start: this.props.events[idx].start,
                 end: this.props.events[idx].end,
                 allDay: this.props.events[idx].allDay,

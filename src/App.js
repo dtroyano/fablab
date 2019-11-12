@@ -10,12 +10,14 @@ import HomePage from './components/HomePage/HomePage';
 import Layout from './containers/Layout/Layout';
 import ResourceCalendar from './containers/ResourceCalendar/RescourceCalendar';
 import BlogHomePage from './containers/Blog/Read/Index';
+import Auth from './containers/Auth/Auth';
 
 function App() {
   return (
     <Layout>
       <Switch>
         <Route path={['/blog/:id', '/blog']} component={BlogHomePage} />
+        <Route path='/auth' exact component={Auth} />
         <Route path='/reserveEquipment' exact component={ResourceCalendar} />
         <Route path='/calendar' exact component={MyCalendar} />
         <Route path='/class' exact component={BookClass} />
