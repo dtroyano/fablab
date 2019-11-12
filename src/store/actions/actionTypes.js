@@ -19,3 +19,4 @@ export const INIT_BLOG = 'INIT_BLOG';
 export const ADD_BLOG = 'ADD_BLOG';
 export const UPDATE_BLOG = 'UPDATE_BLOG';
 export const REMOVE_BLOG = 'REMOVE_BLOG';
+export const GET_BLOG = 'GET_BLOG';

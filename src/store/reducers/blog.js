@@ -1,7 +1,8 @@
 import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
-    blog: {}
+    blog: {},
+    entry: {}
 }
 
 const reducer = (state = initialState, action) => {
@@ -10,6 +11,10 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state, blog: action.entries
             };
+        case actionTypes.GET_BLOG:
+            return {
+                ...state, entry: action.entry, loaded: true
+            }
         default:
             return state;
     }

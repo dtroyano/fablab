@@ -15,7 +15,7 @@ function App() {
   return (
     <Layout>
       <Switch>
-        <Route path='/blog' exact component={BlogHomePage} />
+        <Route path='/blog' component={BlogHomePage} />
         <Route path='/reserveEquipment' exact component={ResourceCalendar} />
         <Route path='/calendar' exact component={MyCalendar} />
         <Route path='/class' exact component={BookClass} />
