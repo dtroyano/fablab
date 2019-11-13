@@ -12,6 +12,7 @@ import recurringReducer from './store/reducers/recurringEvents';
 import resourceCalendarReducer from './store/reducers/resourceCalendar';
 import resourceReducer from './store/reducers/resources';
 import blogReducer from './store/reducers/blog';
+//import authReducer from './store/reducers/auth';
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
