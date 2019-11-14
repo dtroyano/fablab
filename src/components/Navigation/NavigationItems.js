@@ -11,6 +11,10 @@ const navigationItems = (props) => (
         <NavigationItem link='/calendar'>Calendar</NavigationItem>
         <NavigationItem link='/contact'>Contact</NavigationItem>
         <NavigationItem link='/about'>About</NavigationItem>
+        {!props.isAuth
+            ? <NavigationItem link='/auth'>Sign In</NavigationItem>
+            : <NavigationItem link='/logout'>Sign Out</NavigationItem>
+        }
     </ul>
 );
 

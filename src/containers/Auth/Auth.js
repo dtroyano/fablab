@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom'
 import axios from 'axios';
 import Input from '../../components/UI/Input/Input';
 import Button from '../../components/UI/Button/Button';
+import * as actions from '../../store/actions/index';
 
 class Auth extends Component {
     state = {
@@ -23,56 +25,33 @@ class Auth extends Component {
 
     signIn = (event) => {
         event.preventDefault();
-        const url = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBxQL1nIOEJvGNZmwXe2Vb-dZ3Vt1GBse8'
-        this.connectToUsers(url);
+        this.connectToUsers(false);
     }
 
     signUp = (event) => {
         event.preventDefault();
-        const url = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBxQL1nIOEJvGNZmwXe2Vb-dZ3Vt1GBse8';
-        this.connectToUsers(url);
+        this.connectToUsers(true);
     }
 
-    connectToUsers = (url) => {
-        const authData = {
-            email: this.state.authForm.user,
-            password: this.state.authForm.password,
-            returnSecureToken: true
-        }
-        axios.post(url, authData)
-            .then(resp => {
-                console.log(resp.data);
+    connectToUsers = (isSignup) => {
+        this.props.onAuth(this.state.authForm.user, this.state.authForm.password, isSignup);
 
-                this.setState({ idToken: resp.data.idToken });
-            })
-            .catch(err => {
-                console.log(err);
-            })
-    }
-
-    getUserData = (event) => {
-        console.log(this.state.idToken)
-        event.preventDefault();
-        axios.post('https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyBxQL1nIOEJvGNZmwXe2Vb-dZ3Vt1GBse8', { idToken: this.state.idToken })
-            .then(resp => {
-                console.log(resp);
-            })
-            .catch(err => {
-                console.log(err);
-            })
     }
 
     render() {
+        let authRedirect = null;
+        if (this.props.isAuth) {
+            authRedirect = <Redirect to='/' />
+        }
         return (
             <div>
-                AUTH
+                {authRedirect}
                 <form>
                     <Input elementType='input' value={this.state.user} changed={(event) => this.inputChangedHandler(event, 'user')} />
                     <Input elementType='input' value={this.state.password} changed={(event) => this.inputChangedHandler(event, 'password')} />
                     <Button clicked={this.signIn}>SIGN IN</Button>
                     <Button clicked={this.signUp}>SIGN UP</Button>
                 </form>
-                <Button clicked={this.getUserData}>GET USER</Button>
             </div>
         );
     }
@@ -80,13 +59,16 @@ class Auth extends Component {
 
 const mapStateToProps = state => {
     return {
-
-    }
+        loading: state.auth.loading,
+        error: state.auth.error,
+        isAuth: state.auth.token !== null,
+        authRedirect: state.auth.authRedirectPath
+    };
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-
+        onAuth: (email, password, isSignup) => dispatch(actions.auth(email, password, isSignup))
     }
 }
 

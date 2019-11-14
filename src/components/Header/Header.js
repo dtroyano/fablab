@@ -9,7 +9,7 @@ import classes from './Header.module.css';
 const header = (props) => (
     <header className={classes.Header}>
         <Logo />
-        <NavigationItems />
+        <NavigationItems isAuth={props.isAuth} />
         <BookButtons />
     </header >
 );

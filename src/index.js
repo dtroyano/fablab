@@ -12,7 +12,7 @@ import recurringReducer from './store/reducers/recurringEvents';
 import resourceCalendarReducer from './store/reducers/resourceCalendar';
 import resourceReducer from './store/reducers/resources';
 import blogReducer from './store/reducers/blog';
-//import authReducer from './store/reducers/auth';
+import authReducer from './store/reducers/auth';
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
@@ -21,7 +21,8 @@ const rootReducer = combineReducers({
     recurring: recurringReducer,
     resourceCalendar: resourceCalendarReducer,
     resources: resourceReducer,
-    blog: blogReducer
+    blog: blogReducer,
+    auth: authReducer
 });
 
 const store = createStore(rootReducer, composeEnhancers(applyMiddleware(thunk)));
