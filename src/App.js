@@ -14,6 +14,9 @@ import ResourceCalendar from './containers/ResourceCalendar/RescourceCalendar';
 import BlogHomePage from './containers/Blog/Read/Index';
 import Auth from './containers/Auth/Auth';
 import Logout from './containers/Auth/Logout';
+import AuthLogic from './containers/Auth/AuthLogic';
+import SignUp from './containers/Auth/SignUp';
+import User from './containers/User/User';
 
 class App extends Component {
   componentDidMount() {
@@ -21,8 +24,14 @@ class App extends Component {
   }
 
   render() {
+    if (this.props.isAuth && !this.props.userLoaded) {
+      this.props.onGetUserForState(localStorage.getItem('userId'))
+    }
+    //USE this.props.role TO CONTROL ROUTING 
     let routes = (
-      <Route path='/' component={Auth} />
+      <Switch>
+        <Route path='/' component={Auth} />
+      </Switch>
     );
 
     if (this.props.isAuth) {
@@ -35,28 +44,35 @@ class App extends Component {
           <Route path='/class' exact component={BookClass} />
           <Route path='/equipment' exact component={Equipment} />
           <Route path='/contact' exact component={Contact} />
+          <Route path='/signup' exact component={SignUp} />
           <Route path='/logout' exact component={Logout} />
+          <Route path='/:id' exact component={User} />
           <Route path='/' exact component={HomePage} />
         </Switch>
       );
     }
     return (
-      <Layout>
-        {routes}
-      </Layout>
+      <AuthLogic>
+        <Layout>
+          {routes}
+        </Layout>
+      </AuthLogic>
     );
   }
 }
 
 const mapStateToProps = state => {
   return {
-    isAuth: state.auth.token !== null
+    isAuth: state.auth.token !== null,
+    role: state.auth.user.role,
+    userLoaded: state.auth.user.userLoaded
   };
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    onTryAutoSignup: () => dispatch(actions.authCheckState())
+    onTryAutoSignup: () => dispatch(actions.authCheckState()),
+    onGetUserForState: (id) => dispatch(actions.getUserForState(id))
   }
 }
 

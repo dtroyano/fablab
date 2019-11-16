@@ -385,7 +385,6 @@ class AddEvent extends Component {
     }
 
     recurringEvent = () => {
-        console.log('made it recurring submit');
         let byDayOfWeek = [];
         for (let key in this.state.recurringForm) {
             if (this.state.recurringForm[key].dayOfWeek) {

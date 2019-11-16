@@ -3,4 +3,4 @@ export { recurringInit, addRecurring, removeRecurring, fetchRecurring } from './
 export { addResourceEvent, removeResourceEvent, initResourceCalendar } from './resourceCalendar';
 export { updateResources, initResources } from './resources';
 export { initBlog, getBlog } from './blog';
-export { auth, authCheckState, logout } from './auth';
+export { auth, authCheckState, logout, getUserForState } from './auth';

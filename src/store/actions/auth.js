@@ -1,5 +1,6 @@
 import * as actionTypes from './actionTypes';
 import axios from 'axios';
+import databaseAxios from '../../axios-orders';
 
 export const authStart = () => {
     return {
@@ -39,7 +40,7 @@ export const checkAuthTimeout = (expirationTime) => {
     };
 }
 
-export const auth = (email, password, isSignup) => {
+export const auth = (email, password, isSignup, user = {}) => {
     return dispatch => {
         dispatch(authStart());
         const authData = {
@@ -58,6 +59,9 @@ export const auth = (email, password, isSignup) => {
                 localStorage.setItem('token', resp.data.idToken);
                 localStorage.setItem('expirationDate', expirationDate);
                 localStorage.setItem('userId', resp.data.localId);
+                if (isSignup) {
+                    dispatch(addUserToDatabase(user, resp.data.localId));
+                }
                 dispatch(authSuccess(resp.data.idToken, resp.data.localId));
                 dispatch(checkAuthTimeout(resp.data.expiresIn))
             })
@@ -67,6 +71,32 @@ export const auth = (email, password, isSignup) => {
             });
     };
 };
+
+const addUserToDatabase = (user, id) => {
+    return dispatch => {
+        databaseAxios.put(`users/${id}.json`, { ...user })
+            .then(res => {
+                dispatch(updateUserState(user));
+            });
+    }
+}
+
+export const getUserForState = (id) => {
+    return dispatch => {
+        databaseAxios.get(`users/${id}.json`)
+            .then(resp => {
+                dispatch(updateUserState(resp.data))
+            })
+
+    }
+}
+
+const updateUserState = (user) => {
+    return {
+        type: actionTypes.AUTH_UPDATE_USER,
+        user: user
+    }
+}
 
 export const setAuthRedirectPath = (path) => {
     return {

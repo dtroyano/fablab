@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom'
+import { Redirect, Link } from 'react-router-dom'
 import axios from 'axios';
 import Input from '../../components/UI/Input/Input';
 import Button from '../../components/UI/Button/Button';
@@ -28,11 +28,6 @@ class Auth extends Component {
         this.connectToUsers(false);
     }
 
-    signUp = (event) => {
-        event.preventDefault();
-        this.connectToUsers(true);
-    }
-
     connectToUsers = (isSignup) => {
         this.props.onAuth(this.state.authForm.user, this.state.authForm.password, isSignup);
 
@@ -50,7 +45,7 @@ class Auth extends Component {
                     <Input elementType='input' value={this.state.user} changed={(event) => this.inputChangedHandler(event, 'user')} />
                     <Input elementType='input' value={this.state.password} changed={(event) => this.inputChangedHandler(event, 'password')} />
                     <Button clicked={this.signIn}>SIGN IN</Button>
-                    <Button clicked={this.signUp}>SIGN UP</Button>
+                    <Link to='/signup'>SIGN UP</Link>
                 </form>
             </div>
         );
