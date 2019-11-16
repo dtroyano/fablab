@@ -112,7 +112,6 @@ class SignUp extends Component {
                 formElementArray.map(formElement => (
                     <Input
                         changed={(event) => this.inputChangedHandler(event, formElement.id)}
-                        dateTimeChanged={(event) => this.dateTimeHandler(event, formElement.id)}
                         key={formElement.id}
                         elementId={formElement.id}
                         elementType={formElement.config.elementType}

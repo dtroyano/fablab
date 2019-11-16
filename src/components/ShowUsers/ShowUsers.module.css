@@ -1,0 +1,6 @@
+.Users{
+    display: flex;
+    flex-wrap: wrap;
+    padding-left: 30px;
+    padding-right: 30px;
+}

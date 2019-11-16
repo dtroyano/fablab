@@ -72,10 +72,19 @@ export const auth = (email, password, isSignup, user = {}) => {
     };
 };
 
+export const updateUserDatabase = (user, id) => {
+    return dispatch => {
+        databaseAxios.put(`users/${id}.json`, { ...user })
+            .then(resp => {
+                dispatch(updateUserState(user));
+            })
+    }
+}
+
 const addUserToDatabase = (user, id) => {
     return dispatch => {
         databaseAxios.put(`users/${id}.json`, { ...user })
-            .then(res => {
+            .then(resp => {
                 dispatch(updateUserState(user));
             });
     }
@@ -122,3 +131,19 @@ export const authCheckState = () => {
         }
     };
 };
+
+const usersGot = (users) => {
+    return {
+        type: actionTypes.GET_USERS,
+        users: users
+    }
+}
+
+export const getUsers = () => {
+    return dispatch => {
+        databaseAxios.get('users.json')
+            .then(resp => {
+                dispatch(usersGot(resp.data));
+            })
+    }
+}

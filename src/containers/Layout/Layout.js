@@ -8,7 +8,7 @@ class Layout extends Component {
     render() {
         return (
             <Aux>
-                <Header isAuth={this.props.isAuth} />
+                <Header isAuth={this.props.isAuth} role={this.props.role} />
                 <main>
                     {this.props.children}
                 </main>

@@ -17,6 +17,7 @@ import Logout from './containers/Auth/Logout';
 import AuthLogic from './containers/Auth/AuthLogic';
 import SignUp from './containers/Auth/SignUp';
 import User from './containers/User/User';
+import Staff from './containers/Staff/Staff';
 
 class App extends Component {
   componentDidMount() {
@@ -46,6 +47,7 @@ class App extends Component {
           <Route path='/contact' exact component={Contact} />
           <Route path='/signup' exact component={SignUp} />
           <Route path='/logout' exact component={Logout} />
+          <Route path='/staff' exact component={Staff} />
           <Route path='/:id' exact component={User} />
           <Route path='/' exact component={HomePage} />
         </Switch>
@@ -53,7 +55,7 @@ class App extends Component {
     }
     return (
       <AuthLogic>
-        <Layout>
+        <Layout role={this.props.role}>
           {routes}
         </Layout>
       </AuthLogic>

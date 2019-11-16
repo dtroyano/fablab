@@ -27,3 +27,4 @@ export const AUTH_FAIL = 'AUTH_FAIL';
 export const AUTH_LOGOUT = 'AUTH_LOGOUT';
 export const SET_AUTH_REDIRECT_PATH = 'SET_AUTH_REDIRECT_PATH';
 export const AUTH_UPDATE_USER = 'AUTH_UPDATE_USER';
+export const GET_USERS = 'GET_USERS';

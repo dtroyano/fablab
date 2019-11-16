@@ -1,0 +1,13 @@
+.UserBox {
+    width: 20%;
+    margin: 30px 10px;
+    padding: 10px;
+}
+.Row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0px 20px;
+}
+.Row p {
+    margin: 5px;
+}
