@@ -13,13 +13,15 @@ const showUsers = (props) => {
             data: props.users[key]
         });
     }
-    console.log(usersArray)
     let users = null;
     if (props.users) {
         users = (
             <div className={classes.Users}>
                 {usersArray.map(user => (
                     <UserBox key={user.id}
+                        id={user.id}
+                        authRole={props.authRole}
+                        updateRole={props.updateRole}
                         name={user.data.name}
                         email={user.data.email}
                         phone={user.data.phone}

@@ -84,7 +84,7 @@ class SignUp extends Component {
             community: this.state.newUser.community.value,
             organization: this.state.newUser.organization.value,
             role: 'user',
-            permissions: [],
+            permissions: {},
             lastLogin: new Date()
         }
         this.props.onSignUp(email, password, true, user);
