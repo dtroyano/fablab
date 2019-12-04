@@ -12,6 +12,7 @@ import Button from '../../components/UI/Button/Button';
 import ChangeResources from './ChangeResources/ChangeResources';
 import AddRescourceEvent from './AddResourceEvent/AddResourceEvent';
 import CalendarPopUp from '../../components/UI/CalendarPopUp/CalendarPopUp';
+import classes from './ResourceCalendar.module.css';
 
 const DragAndDropCalendar = withDragAndDrop(Calendar);
 
@@ -24,7 +25,7 @@ class ResourceCalendar extends Component {
             eventStart: new Date(),
             eventEnd: new Date(),
             resourceId: 0,
-            allDay: false
+            //allDay: false
         },
         showEvent: false,
         popUp: {
@@ -57,7 +58,7 @@ class ResourceCalendar extends Component {
             const idx = events.indexOf(evt);
             const event = {
                 title: evt.title,
-                allDay: evt.allDay,
+                //allDay: evt.allDay,
                 resourceId: evt.resourceId,
                 userId: 1,
                 start,
@@ -81,8 +82,8 @@ class ResourceCalendar extends Component {
         const newEventData = {
             eventStart: event.start,
             eventEnd: event.end,
-            resourceId: event.resourceId,
-            allDay: event.slots.length === 1
+            resourceId: event.resourceId
+            //allDay: event.slots.length === 1
         };
         this.setState({ addEvent: true, addEventData: newEventData });
     }
@@ -162,7 +163,7 @@ class ResourceCalendar extends Component {
                 close={this.removeAddEvent}
                 start={this.state.addEventData.eventStart}
                 end={this.state.addEventData.eventEnd}
-                allDay={this.state.addEventData.allDay}
+                //allDay={this.state.addEventData.allDay}
                 resourceId={this.state.addEventData.resourceId} />;
         }
         if (this.state.updateEvent) {
@@ -173,7 +174,7 @@ class ResourceCalendar extends Component {
                 resource: this.props.events[idx].resourceId,
                 start: this.props.events[idx].start,
                 end: this.props.events[idx].end,
-                allDay: this.props.events[idx].allDay,
+                //allDay: this.props.events[idx].allDay,
                 key: this.state.popUp.key,
                 idx: idx
             };
@@ -183,7 +184,7 @@ class ResourceCalendar extends Component {
                     close={this.removeAddEvent}
                     start={eventInfo.start}
                     end={eventInfo.end}
-                    allDay={eventInfo.allDay}
+                    //allDay={eventInfo.allDay}
                     resourceId={eventInfo.resourceId}
                     eventInfo={eventInfo} />;
             }
@@ -200,11 +201,20 @@ class ResourceCalendar extends Component {
                     removeEvent={this.removeEvent}
                     updateEvent={this.updateEvent} />
                 <DragAndDropCalendar
+                    className={classes.ResourceCalendar}
                     selectable
                     localizer={localizer}
                     defaultView={Views.WEEK}
                     events={this.props.events}
                     onEventResize={this.resizeEvent}
+                    slotPropGetter={date => ({
+                        className: date <= new Date()
+                            ? classes.old
+                            : null
+                    })}
+                    step={30}
+                    min={new Date('Nov 17, 2019 09:0:0')}
+                    max={new Date('Nov 17, 2019 22:0:0')}
                     //onEventDrop={this.moveEvent}
                     //onDragStart={console.log}
                     resizable

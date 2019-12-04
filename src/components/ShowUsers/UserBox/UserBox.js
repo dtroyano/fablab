@@ -6,8 +6,8 @@ import Button from '../../UI/Button/Button';
 import Input from '../../UI/Input/Input';
 
 const userBox = (props) => {
-    console.log(props.authRole);
     let role = <p>{props.role}</p>
+    let group = <p>{props.group}</p>
     if (props.authRole === 'admin') {
         const roleInput = {
             label: "Role",
@@ -21,12 +21,39 @@ const userBox = (props) => {
             },
             value: props.role
         };
+        const groupInput = {
+            label: "Group",
+            elementType: 'select',
+            elementConfig: {
+                options: [
+                    { value: 'community', displayValue: 'Community' },
+                    { value: 'delgadoStaff', displayValue: 'Delgado Staff' },
+                    { value: 'delgadoTeacher', displayValue: 'Delgado Teacher' },
+                    { value: 'fabLabStaff', displayValue: 'FabLab Staff' },
+                    { value: 'k12Mentor', displayValue: 'K-12 Mentor' },
+                    { value: 'k12Teacher', displayValue: 'K-12 Teacher' },
+                    { value: 'delgadoStudent', displayValue: 'Delgado Student' }
+                ]
+            },
+            value: props.group
+        };
         role = <Input
             changed={(event) => roleChanged(event)}
             elementType={roleInput.elementType}
             elementConfig={roleInput.elementConfig}
             value={roleInput.value}
             label={roleInput.label} />
+        group = <Input
+            changed={(event) => groupChanged(event)}
+            elementType={groupInput.elementType}
+            elementConfig={groupInput.elementConfig}
+            value={groupInput.value}
+            label={groupInput.label} />
+    }
+
+    const groupChanged = (event) => {
+        event.preventDefault();
+        props.updateGroup(props.id, event.target.value);
     }
 
     const roleChanged = (event) => {
@@ -42,8 +69,11 @@ const userBox = (props) => {
                 <p>{props.phone}</p>
             </div>
             <div className={classes.Row}>
-                <p>{props.community}</p>
+                <p>{props.gender}</p>
                 <p>{props.organization}</p>
+            </div>
+            <div className={classes.Row}>
+                {group}
             </div>
             <div className={classes.Row}>
                 {role}

@@ -1,0 +1,16 @@
+.ResourceCalendar :global .rbc-allday-cell {
+    display: none;
+    }
+
+.ResourceCalendar :global .rbc-time-view .rbc-header {
+  border-bottom: none;
+}
+
+.ResourceCalendar :global .rbc-timeslot-group {
+  border-bottom: 1px solid rgba(69,69,69,.8);
+}
+
+.old {
+    background-color: rgba(69,69,69,.8);
+    border: none !important;
+}

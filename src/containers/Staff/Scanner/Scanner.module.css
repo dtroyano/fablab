@@ -1,0 +1,8 @@
+.Scanner {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.User {
+    width: 30%;
+}

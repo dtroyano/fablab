@@ -22,10 +22,12 @@ const showUsers = (props) => {
                         id={user.id}
                         authRole={props.authRole}
                         updateRole={props.updateRole}
+                        updateGroup={props.updateGroup}
                         name={user.data.name}
                         email={user.data.email}
                         phone={user.data.phone}
-                        community={user.data.community}
+                        gender={user.data.gender}
+                        group={user.data.group}
                         organization={user.data.organization}
                         role={user.data.role}
                         permissions={user.data.permissions}

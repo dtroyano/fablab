@@ -39,11 +39,12 @@ class User extends Component {
                 },
                 value: ''
             },
-            community: {
-                label: "Community",
+            group: {
+                label: "Group",
                 elementType: 'select',
                 elementConfig: {
                     options: [
+                        { value: 'community', displayValue: 'Community' },
                         { value: 'delgadoStaff', displayValue: 'Delgado Staff' },
                         { value: 'delgadoTeacher', displayValue: 'Delgado Teacher' },
                         { value: 'fabLabStaff', displayValue: 'FabLab Staff' },
@@ -52,7 +53,7 @@ class User extends Component {
                         { value: 'delgadoStudent', displayValue: 'Delgado Student' }
                     ]
                 },
-                value: 'delgadoStaff'
+                value: 'commmunity'
             },
             organization: {
                 label: 'Organization',
@@ -63,6 +64,18 @@ class User extends Component {
                 },
                 value: ''
             },
+            gender: {
+                label: "Gender",
+                elementType: 'select',
+                elementConfig: {
+                    options: [
+                        { value: 'female', displayValue: 'Female' },
+                        { value: 'male', displayValue: 'Male' },
+                        { value: 'other', displayValue: 'Other' }
+                    ]
+                },
+                value: 'female'
+            }
         }
     }
 
@@ -77,12 +90,16 @@ class User extends Component {
         const updatedOrganization = { ...updatedForm.organization };
         updatedOrganization.value = this.props.user.organization
         updatedForm.organization = updatedOrganization;
-        const updatedCommunity = { ...updatedForm.community };
-        updatedCommunity.value = this.props.user.community
-        updatedForm.community = updatedCommunity;
+        const updatedGroup = { ...updatedForm.group };
+        updatedGroup.value = this.props.user.group
+        updatedForm.group = updatedGroup;
         const updatedPhone = { ...updatedForm.phone };
         updatedPhone.value = this.props.user.phone
         updatedForm.phone = updatedPhone;
+        const updatedGender = { ...updatedForm.gender };
+        updatedGender.value = this.props.user.gender
+        updatedForm.gender = updatedGender;
+
         this.setState({ userData: updatedForm, userUpdated: true });
     }
 
@@ -106,8 +123,9 @@ class User extends Component {
             name: this.state.userData.name.value,
             email: this.state.userData.email.value,
             phone: this.state.userData.phone.value,
-            community: this.state.userData.community.value,
+            group: this.state.userData.group.value,
             organization: this.state.userData.organization.value,
+            gender: this.state.userData.gender.value,
             role: this.props.user.role,
             permissions: this.props.user.permissions,
             lastLogin: new Date()

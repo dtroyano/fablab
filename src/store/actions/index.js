@@ -4,3 +4,4 @@ export { addResourceEvent, removeResourceEvent, initResourceCalendar } from './r
 export { updateResources, initResources } from './resources';
 export { initBlog, getBlog } from './blog';
 export { auth, authCheckState, logout, getUserForState, updateUserDatabase, getUsers } from './auth';
+export { findUserByEmail, findUserById, checkInUser, checkOutUser, loadCSVData, deleteCSVData, checkInK12Group } from './tracking';

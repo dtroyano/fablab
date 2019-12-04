@@ -19,6 +19,18 @@ class SignUp extends Component {
                 },
                 value: ''
             },
+            gender: {
+                label: "Gender",
+                elementType: 'select',
+                elementConfig: {
+                    options: [
+                        { value: 'female', displayValue: 'Female' },
+                        { value: 'male', displayValue: 'Male' },
+                        { value: 'other', displayValue: 'Other' }
+                    ]
+                },
+                value: 'female'
+            },
             email: {
                 label: 'Email',
                 elementType: 'input',
@@ -46,11 +58,13 @@ class SignUp extends Component {
                 },
                 value: ''
             },
-            community: {
-                label: "Community",
+            group: {
+                label: "Group",
                 elementType: 'select',
                 elementConfig: {
                     options: [
+                        { value: 'community', displayValue: 'Community' },
+                        { value: 'delgadoStudent', displayValue: 'Delgado Student' },
                         { value: 'delgadoStaff', displayValue: 'Delgado Staff' },
                         { value: 'delgadoTeacher', displayValue: 'Delgado Teacher' },
                         { value: 'fabLabStaff', displayValue: 'FabLab Staff' },
@@ -59,7 +73,7 @@ class SignUp extends Component {
                         { value: 'delgadoStudent', displayValue: 'Delgado Student' }
                     ]
                 },
-                value: 'delgadoStaff'
+                value: 'commmunity'
             },
             organization: {
                 label: 'Organization',
@@ -80,8 +94,9 @@ class SignUp extends Component {
         const user = {
             name: this.state.newUser.name.value,
             email: this.state.newUser.email.value,
+            gender: this.state.newUser.gender.value,
             phone: this.state.newUser.phone.value,
-            community: this.state.newUser.community.value,
+            group: this.state.newUser.group.value,
             organization: this.state.newUser.organization.value,
             role: 'user',
             permissions: {},

@@ -3,9 +3,8 @@ import axios from '../../axios-orders';
 
 export const updateResources = (resources) => {
     return dispatch => {
-        axios.delete('resourceCalendar/resources.json')
-            .then(res => {
-                axios.post('resourceCalendar/resources.json', { resources })
+        axios.put(`resourceCalendar/resources.json`, { resources })
+            .then(_res => {
                 dispatch(setResources(resources));
             })
     }
@@ -22,10 +21,7 @@ export const initResources = () => {
     return dispatch => {
         axios.get('resourceCalendar/resources.json')
             .then(res => {
-                let resources = [];
-                for (let key in res.data) {
-                    resources = res.data[key].resources;
-                }
+                const resources = res.data;
                 dispatch(setResources(resources));
             });
     }

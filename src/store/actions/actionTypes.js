@@ -28,3 +28,12 @@ export const AUTH_LOGOUT = 'AUTH_LOGOUT';
 export const SET_AUTH_REDIRECT_PATH = 'SET_AUTH_REDIRECT_PATH';
 export const AUTH_UPDATE_USER = 'AUTH_UPDATE_USER';
 export const GET_USERS = 'GET_USERS';
+
+export const FOUND_USER = 'FOUND_USER';
+export const USER_NOT_FOUND = 'USER_NOT_FOUND';
+export const CHECKED_IN = 'CHECKED_IN';
+export const CHECKED_OUT = 'CHECKED_OUT';
+export const DATA_LOADED_FOR_CSV = 'DATA_LOADED_FOR_CSV';
+export const UNLOAD_CSV = 'UNLOAD_CSV';
+export const CSV_DATA_DELETED = 'CSV_DATA_DELETED';
+export const K12GROUP_CHECKED_IN = 'K12GROUP_CHECKED_IN';

@@ -38,17 +38,17 @@ class AddResourceEvent extends Component {
                 },
                 value: this.props.end
             },
-            allDay: {
-                label: "Event is All Day",
-                elementType: 'select',
-                elementConfig: {
-                    options: [
-                        { value: false, displayValue: "No" },
-                        { value: true, displayValue: "Yes" }
-                    ]
-                },
-                value: this.props.allDay
-            },
+            // allDay: {
+            //     label: "Event is All Day",
+            //     elementType: 'select',
+            //     elementConfig: {
+            //         options: [
+            //             { value: false, displayValue: "No" },
+            //             { value: true, displayValue: "Yes" }
+            //         ]
+            //     },
+            //     value: this.props.allDay
+            // },
             resourceId: {
                 label: "Resource",
                 elementType: 'select',
@@ -98,7 +98,7 @@ class AddResourceEvent extends Component {
         let event = {
             id: newId,
             title: this.state.addForm.title.value,
-            allDay: this.state.addForm.allDay.value === 'true',
+            //allDay: this.state.addForm.allDay.value === 'true',
             start: this.state.addForm.start.value,
             end: this.state.addForm.end.value,
             resourceId: parseInt(this.state.addForm.resourceId.value),
